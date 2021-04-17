@@ -1,8 +1,17 @@
+# DNS Performance Testing
+# Version:            0.02
+# Last updated:       2021-04-16
+# Changelog:          0.02 - added argument parsing
+#                     0.01 - initial build
+
+
 import sys
+import argparse
 import json
 import dns.resolver
 from datetime import datetime, timedelta
-
+import os.path
+from os import path
 
 def writeResults(results, outputFile):
     outputfile = open(outputFile,"w",encoding="utf-8")
@@ -17,6 +26,10 @@ def loadNameServersFile(nameserversFile):
     print('Loading the nameservers that are to be queried.')
     
     dnsNameServers = []
+    
+    if not path.exists(nameserversFile):
+        print('I cannot find file ' + nameserversFile)
+        sys.exit(1)
 
     nameServerFile = open(nameserversFile, "r", encoding="utf-8")
 
@@ -29,9 +42,16 @@ def loadNameServersFile(nameserversFile):
 
 
 def loadQueriesFile(queriesFile):
+
     queries = []
 
+    if not path.exists(queriesFile):
+        print('I cannot find file ' + queriesFile)
+        sys.exit(1)
+
     print('Loading queries from ' + queriesFile)
+
+    
 
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
@@ -96,25 +116,56 @@ def performQueries(nameservers, queries):
     return results
 
 
-def main():
-    queries = loadQueriesFile('queries.txt')
-    nameservers = loadNameServersFile('nameservers.txt')
+def parseArguments():
+    # Instantiate the parser
+    parser = argparse.ArgumentParser(description='DNS Performance testing')
 
+    # Optional arguments
+    parser.add_argument('--ifname', default="nameservers.txt",
+                        help='List of nameserver IP addresses, each on a new line')
+
+    parser.add_argument('--ifquery', default='queries.txt',
+                        help='List of queries to be performed.')
+
+    parser.add_argument('--ofresults', default='output.txt',
+                        help='JSON results output file')
+
+
+    global args
+    args = parser.parse_args()
+
+
+
+def main():
+    
+    
+    parseArguments()
+    
+    timenow = datetime.utcnow()
+    print('Script start time: ', str(timenow), '\n')
+        
+    
+    queryFile = args.ifquery
+    nameserversFile = args.ifname
+    outputResults = args.ofresults
+
+    queries = loadQueriesFile(queryFile)
+    nameservers = loadNameServersFile(nameserversFile)
+    
     results = performQueries(nameservers,queries)
 
-    writeResults(results,'output.json')
+    writeResults(results,outputResults)
+
+
+    timenow = datetime.utcnow()
+    print('\nScript stop time: ', str(timenow))
+
 
 
 if __name__ == '__main__':
     try:
-        timenow = datetime.utcnow()
-        print('Script start time: ', str(timenow), '\n')
         
-
         main()
-
-        timenow = datetime.utcnow()
-        print('\nScript stop time: ', str(timenow))
 
 
     except KeyboardInterrupt:
