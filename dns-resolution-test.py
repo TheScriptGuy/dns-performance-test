@@ -1,7 +1,8 @@
 # DNS Performance Testing
-# Version:            0.02
-# Last updated:       2021-04-16
-# Changelog:          0.02 - added argument parsing
+# Version:            0.03
+# Last updated:       2021-04-17
+# Changelog:          0.03 - Adding detailed results output
+#                     0.02 - added argument parsing
 #                     0.01 - initial build
 
 
@@ -70,7 +71,34 @@ def displayResults(results):
     headers = ['DNS Server','DNS Query', 'DNS Response', 'Response Time (ms)']
     print(*headers,sep='\t\t')
 
-    print('{: <24}{: <24}{}\t\t{:.1f}'.format(server,query,response,queryTime))
+# dataItem =  {'query': 'test.com', 'response': ['69.172.200.235'], 'responseTime': '14.8'}
+#dataItem2 =  query
+#dataItem2 =  response
+#dataItem2 =  responseTime
+#dataItem =  {'query': 'google.com', 'response': ['142.250.69.206'], 'responseTime': '7.3'}
+#dataItem2 =  query
+#dataItem2 =  response
+#dataItem2 =  responseTime
+#dataItem =  {'query': 'abc.com', 'response': ['99.86.38.114', '99.86.38.15', '99.86.38.42', '99.86.38.122'], 'responseTime': '32.8'}
+#dataItem2 =  query
+#dataItem2 =  response
+#dataItem2 =  responseTime
+
+    for nameserverItem in results:
+        print('{: <15}'.format(nameserverItem),end=' ')
+
+        for dataItem in results[nameserverItem]:
+            for dataItem2 in dataItem:
+                if dataItem2 == 'query':
+                    print('{}'.format(dataItem[dataItem2]), end=' ')
+                if dataItem2 == 'response':
+                    for responseItem in dataItem[dataItem2]:
+                        print('{}'.format(responseItem), end=' ')
+                if dataItem2 == 'responseTime':
+                    print('{}'.format(dataItem[dataItem2]))
+
+
+    #print('{: <24}{: <24}{}\t\t{:.1f}'.format(server,query,response,queryTime))
 
 
 
@@ -85,7 +113,9 @@ def performQueries(nameservers, queries):
     for server in nameservers:
         resolver.nameservers = [server]
         for query in queries:
-            print('Query count = ' + str(counter))
+            if not args.verbose:
+                print('Query count = ' + str(counter))
+
             queryStartTime = datetime.now()
             answer = resolver.resolve(query)
 
@@ -98,7 +128,6 @@ def performQueries(nameservers, queries):
             for response in answer:
                 s_queryTime = str("{:.1f}".format(queryTime))
                 l_response.append(response.address)
-
         
 
             if server not in results:
@@ -108,6 +137,7 @@ def performQueries(nameservers, queries):
 
                 thisQuery = {"query": query, "response": l_response, "responseTime": s_queryTime}
                 results[server].append(thisQuery)
+                
                 counter += 1
 
             except KeyError:
@@ -131,6 +161,9 @@ def parseArguments():
                         help='JSON results output file')
 
 
+    parser.add_argument('--verbose', action='store_true',
+                        help='Displays the response times of all the tests.')
+
     global args
     args = parser.parse_args()
 
@@ -153,6 +186,8 @@ def main():
     nameservers = loadNameServersFile(nameserversFile)
     
     results = performQueries(nameservers,queries)
+
+    displayResults(results)
 
     writeResults(results,outputResults)
 
