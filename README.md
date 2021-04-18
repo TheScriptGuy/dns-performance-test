@@ -10,3 +10,5 @@ By default, it'll read the inputs from filenames:
 
 Future improvements:
 * default list of nameservers and queries to be included in bundle
+* ability to download nameservers and queries from a URL
+* ability to publish the output to a webserver somewhere.
