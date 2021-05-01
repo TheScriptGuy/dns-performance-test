@@ -7,6 +7,66 @@ By default, it'll read the inputs from filenames:
 - queries.txt - list of queries to perform on the DNS nameservers.
 - output.json - the results of querying all the nameservers and their response times in JSON format.
 
+```json
+{  
+   "dnsNameServerIP": [
+    {
+      "query": "hostname.example",
+      "response": [
+        "<IP1>",
+        "<IP2>",
+      ],
+      "responseTime": "<Time in Milliseconds for response>"
+    },
+    {
+      "query": "hostname2.example",
+      "response": [
+        "<IP1>",
+        "<IP2>",
+        "<IP3>",
+        "<IP4>"
+      ],
+      "responseTime": "<Time in Milliseconds for response>"
+    }
+  ]
+}
+
+```
+
+Sample result:
+
+```json
+{
+  "8.8.8.8": [
+    {
+      "query": "test.com",
+      "response": [
+        "69.172.200.235"
+      ],
+      "responseTime": "7.3"
+    },
+    {
+      "query": "google.com",
+      "response": [
+        "216.58.217.46"
+      ],
+      "responseTime": "6.6"
+    },
+    {
+      "query": "abc.com",
+      "response": [
+        "99.84.79.64",
+        "99.84.79.93",
+        "99.84.79.91",
+        "99.84.79.12"
+      ],
+      "responseTime": "39.9"
+    }
+  ]
+}
+
+```
+
 
 Future improvements:
 * default list of nameservers and queries to be included in bundle
