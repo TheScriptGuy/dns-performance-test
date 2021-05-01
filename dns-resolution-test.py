@@ -1,12 +1,6 @@
 # DNS Performance Testing
 # Version:            0.05
 # Last updated:       2021-05-01
-# Changelog:          0.05 - Added error handling for dns.resolver.NoNameservers
-#                     0.04 - Improved error handling and display output. Display entries being loaded from files.
-#                     0.03 - Adding detailed results output
-#                     0.02 - added argument parsing
-#                     0.01 - initial build
-
 
 import sys
 import argparse
