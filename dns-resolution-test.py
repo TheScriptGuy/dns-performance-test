@@ -1,7 +1,8 @@
 # DNS Performance Testing
-# Version:            0.03
-# Last updated:       2021-04-17
-# Changelog:          0.03 - Adding detailed results output
+# Version:            0.04
+# Last updated:       2021-04-30
+# Changelog:          0.04 - Improved error handling and display output. Display entries being loaded from files.
+#                     0.03 - Adding detailed results output
 #                     0.02 - added argument parsing
 #                     0.01 - initial build
 
@@ -35,9 +36,10 @@ def loadNameServersFile(nameserversFile):
     nameServerFile = open(nameserversFile, "r", encoding="utf-8")
 
     for line in nameServerFile:
-        #print(line.rstrip('\n'))
+        print(line.rstrip('\n'), end=' ')
         dnsNameServers.append(line.rstrip('\n'))
-
+    
+    print()
     #print(dnsNameServers)
     return dnsNameServers
 
@@ -57,10 +59,11 @@ def loadQueriesFile(queriesFile):
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
     for line in queryFile:
-        #print(line.rstrip('\n'))
+        print(line.rstrip('\n'),end=' ')
         queries.append(line.rstrip('\n'))
+    
+    print()
 
-    #print(queries)
     queryFile.close()
 
     return queries
@@ -85,17 +88,19 @@ def displayResults(results):
 #dataItem2 =  responseTime
 
     for nameserverItem in results:
-        print('{: <15}'.format(nameserverItem),end=' ')
 
         for dataItem in results[nameserverItem]:
+            print('{: <15}'.format(nameserverItem),end=' ')
             for dataItem2 in dataItem:
                 if dataItem2 == 'query':
-                    print('{}'.format(dataItem[dataItem2]), end=' ')
+                    print('\t{: <23}'.format(dataItem[dataItem2]), end=' ')
                 if dataItem2 == 'response':
-                    for responseItem in dataItem[dataItem2]:
-                        print('{}'.format(responseItem), end=' ')
+                    for i,responseItem in enumerate(dataItem[dataItem2]):
+                        if i:
+                            print(',',end='')
+                        print('{}'.format(responseItem), end='')
                 if dataItem2 == 'responseTime':
-                    print('{}'.format(dataItem[dataItem2]))
+                    print('\t\t{}'.format(dataItem[dataItem2]))
 
 
     #print('{: <24}{: <24}{}\t\t{:.1f}'.format(server,query,response,queryTime))
@@ -117,18 +122,22 @@ def performQueries(nameservers, queries):
                 print('Query count = ' + str(counter))
 
             queryStartTime = datetime.now()
-            answer = resolver.resolve(query)
+
+            try:
+                answer = resolver.resolve(query)
+            except dns.exception.Timeout:
+                print('DNS Timeout - ' + query + ' @' + server)
+                answer = []
 
             queryEndTime = datetime.now()
-
             queryTime = (queryEndTime - queryStartTime).total_seconds() * 1000
 
+            s_queryTime = str("{:.1f}".format(queryTime))
+            
             l_response = []
-
+            
             for response in answer:
-                s_queryTime = str("{:.1f}".format(queryTime))
                 l_response.append(response.address)
-        
 
             if server not in results:
                 results[server] = []
