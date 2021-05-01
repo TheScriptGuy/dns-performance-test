@@ -1,7 +1,8 @@
 # DNS Performance Testing
-# Version:            0.04
-# Last updated:       2021-04-30
-# Changelog:          0.04 - Improved error handling and display output. Display entries being loaded from files.
+# Version:            0.05
+# Last updated:       2021-05-01
+# Changelog:          0.05 - Added error handling for dns.resolver.NoNameservers
+#                     0.04 - Improved error handling and display output. Display entries being loaded from files.
 #                     0.03 - Adding detailed results output
 #                     0.02 - added argument parsing
 #                     0.01 - initial build
@@ -127,6 +128,9 @@ def performQueries(nameservers, queries):
                 answer = resolver.resolve(query)
             except dns.exception.Timeout:
                 print('DNS Timeout - ' + query + ' @' + server)
+                answer = []
+            except dns.resolver.NoNameservers:
+                print('No response. ' + query + ' @' + server)
                 answer = []
 
             queryEndTime = datetime.now()
