@@ -156,6 +156,7 @@ def performQueries(nameservers, queries):
 
 
 def parseArguments():
+
     # Instantiate the parser
     parser = argparse.ArgumentParser(description='DNS Performance testing')
 
