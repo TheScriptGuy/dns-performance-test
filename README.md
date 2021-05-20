@@ -73,6 +73,6 @@ Future improvements:
 * ability to download nameservers and queries from a URL
 * ability to publish the output to a webserver somewhere (HTTP POST)
 * ability to create excel spreadsheet with all tests.
-** extending this to perform conditional highlighting of cells with large latency (>100ms)
-** highlight responseTime results that are beyond a certain threshold compared to other results.
+    * extending this to perform conditional highlighting of cells with large latency (>100ms)
+    * highlight responseTime results that are beyond a certain threshold compared to other results.
 * ability to publish results to google sheets, ms excel online, etc.
