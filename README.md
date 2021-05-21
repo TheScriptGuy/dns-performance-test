@@ -75,6 +75,10 @@ Future improvements:
 * ability to download nameservers and queries from a URL
 * ability to publish the output to a webserver somewhere (HTTP POST)
 * ability to perform different types of nameservers queries (A, PTR, CNAME, MX, COA, NS)
+* ability to tag results for aggregating across multiple devices
+* include script start and end time into json results
+* ability to add hostname of host where script is executing
+    * need to try and figure out a way to create a unique identifier so that you can have devices with the same hostname reporting in.
 * ability to create excel spreadsheet with all tests.
     * extending this to perform conditional highlighting of cells with large latency (>100ms)
     * highlight responseTime results that are beyond a certain threshold compared to other results.
