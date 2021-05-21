@@ -1,6 +1,6 @@
 # DNS Performance Testing
-# Version:            0.05
-# Last updated:       2021-05-01
+# Version:            0.06
+# Last updated:       2021-05-20
 
 import sys
 import argparse
