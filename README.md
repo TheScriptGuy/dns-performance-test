@@ -74,6 +74,7 @@ Future improvements:
 * default list of nameservers and queries to be included in bundle
 * ability to download nameservers and queries from a URL
 * ability to publish the output to a webserver somewhere (HTTP POST)
+* ability to perform different types of nameservers queries (A, PTR, CNAME, MX, COA, NS)
 * ability to create excel spreadsheet with all tests.
     * extending this to perform conditional highlighting of cells with large latency (>100ms)
     * highlight responseTime results that are beyond a certain threshold compared to other results.
