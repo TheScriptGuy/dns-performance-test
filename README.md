@@ -5,6 +5,8 @@ This script will query DNS servers with a provided query list and measure the re
 By default, it'll read the inputs from filenames:
 - nameservers.txt - list of DNS nameservers to query
 - queries.txt - list of queries to perform on the DNS nameservers.
+
+If the argument '--ofresults' is added:
 - output.json - the results of querying all the nameservers and their response times in JSON format.
 
 ```json
