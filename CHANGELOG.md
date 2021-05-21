@@ -2,6 +2,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.06 - 2021-05-20
+Minor adjustment to output data to output.json, not output.txt
+
 ## 0.05 - 2021-05-01
 Added error handling for dns.resolver.NoNameservers
 
