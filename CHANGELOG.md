@@ -3,23 +3,29 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.07 - 2021-05-20
-Added argument option to print results in json format to stdout <br>
+
+### Added
+Added argument option to print results in json format to stdout
+
+### Changed
 Amended results field from DNS query to "Err" if there's a:
 * DNS Timeout
 * No response
 
 
 ## 0.06 - 2021-05-20
+### Changed
 Minor adjustment to output data to output.json, not output.txt
 
 ## 0.05 - 2021-05-01
+### Added
 Added error handling for dns.resolver.NoNameservers
 
 ## 0.04 - 2021-04-30 
+### Changed
 Improved error handling and display output. Display entries being loaded from files. 
 
 ## 0.03 - 2021-04-17
-
 ### Added
 Added ability to display verbose results.
 
