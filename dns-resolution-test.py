@@ -165,7 +165,7 @@ def parseArguments():
     parser.add_argument('--ifquery', default='queries.txt',
                         help='List of queries to be performed.')
 
-    parser.add_argument('--is addedis added::ofresults', default='output.json',
+    parser.add_argument('--ofresults', default='output.json',
                         help='JSON results output file')
 
 
