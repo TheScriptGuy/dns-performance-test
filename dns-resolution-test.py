@@ -1,5 +1,5 @@
 # DNS Performance Testing
-# Version:            0.06
+# Version:            0.07
 # Last updated:       2021-05-20
 
 import sys
@@ -17,7 +17,10 @@ def writeResults(results, outputFile):
     
     outputfile.close()
 
-
+def printJsonStdout(results):
+    print('\n')
+    print(json.dumps(results))
+    print('\n')
 
 def loadNameServersFile(nameserversFile):
     print('Loading the nameservers that are to be queried.')
@@ -69,19 +72,6 @@ def displayResults(results):
     headers = ['DNS Server','DNS Query', 'DNS Response', 'Response Time (ms)']
     print(*headers,sep='\t\t')
 
-# dataItem =  {'query': 'test.com', 'response': ['69.172.200.235'], 'responseTime': '14.8'}
-#dataItem2 =  query
-#dataItem2 =  response
-#dataItem2 =  responseTime
-#dataItem =  {'query': 'google.com', 'response': ['142.250.69.206'], 'responseTime': '7.3'}
-#dataItem2 =  query
-#dataItem2 =  response
-#dataItem2 =  responseTime
-#dataItem =  {'query': 'abc.com', 'response': ['99.86.38.114', '99.86.38.15', '99.86.38.42', '99.86.38.122'], 'responseTime': '32.8'}
-#dataItem2 =  query
-#dataItem2 =  response
-#dataItem2 =  responseTime
-
     for nameserverItem in results:
 
         for dataItem in results[nameserverItem]:
@@ -123,6 +113,7 @@ def performQueries(nameservers, queries):
             except dns.exception.Timeout:
                 print('DNS Timeout - ' + query + ' @' + server)
                 answer = []
+
             except dns.resolver.NoNameservers:
                 print('No response. ' + query + ' @' + server)
                 answer = []
@@ -133,9 +124,12 @@ def performQueries(nameservers, queries):
             s_queryTime = str("{:.1f}".format(queryTime))
             
             l_response = []
-            
-            for response in answer:
-                l_response.append(response.address)
+           
+            if answer:
+                for response in answer:
+                    l_response.append(response.address)
+            else:
+                l_response.append('Err')
 
             if server not in results:
                 results[server] = []
@@ -168,6 +162,8 @@ def parseArguments():
     parser.add_argument('--ofresults', default='output.json',
                         help='JSON results output file')
 
+    parser.add_argument('--jsonstdout', action='store_true',
+                        help='print results to stdout')
 
     parser.add_argument('--verbose', action='store_true',
                         help='Displays the response times of all the tests.')
@@ -196,6 +192,9 @@ def main():
     results = performQueries(nameservers,queries)
 
     displayResults(results)
+
+    if args.jsonstdout:
+        printJsonStdout(results)
 
     writeResults(results,outputResults)
 
