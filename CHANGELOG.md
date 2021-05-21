@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.07 - 2021-05-20
-Added argument option to print results in json format to stdout
+Added argument option to print results in json format to stdout <br>
 Amended results field from DNS query to "Err" if there's a:
 * DNS Timeout
 * No response
