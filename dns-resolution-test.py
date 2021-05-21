@@ -22,6 +22,8 @@ def printJsonStdout(results):
     print(json.dumps(results))
     print('\n')
 
+
+
 def loadNameServersFile(nameserversFile):
     print('Loading the nameservers that are to be queried.')
     
@@ -168,6 +170,7 @@ def parseArguments():
     parser.add_argument('--verbose', action='store_true',
                         help='Displays the response times of all the tests.')
 
+
     global args
     args = parser.parse_args()
 
@@ -185,7 +188,7 @@ def main():
     queryFile = args.ifquery
     nameserversFile = args.ifname
     outputResults = args.ofresults
-
+    
     queries = loadQueriesFile(queryFile)
     nameservers = loadNameServersFile(nameserversFile)
     
@@ -196,8 +199,9 @@ def main():
     if args.jsonstdout:
         printJsonStdout(results)
 
-    writeResults(results,outputResults)
-
+    
+    if args.ofresults:
+        writeResults(results,outputResults)
 
     timenow = datetime.utcnow()
     print('\nScript stop time: ', str(timenow))
