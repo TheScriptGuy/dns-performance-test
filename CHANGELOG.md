@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.09 - 2021-05-22
 ### Added
-* Ability to tag results for aggregating data. To use, create a 'tag.cfg' file in the same working directory as dns-performance-test.py and insert a label. For example:
+* Ability to tag results for aggregating data. To use, create a 'tag.cfg' file in the same working directory as dns-resolution-test.py and insert a label. For example:
 ```bash
 echo "production" > tag.cfg
 ```
