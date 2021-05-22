@@ -1,5 +1,5 @@
 # DNS Performance Testing
-# Version:            0.09
+# Version:            0.10
 # Last updated:       2021-05-22
 
 import sys
@@ -20,14 +20,12 @@ def writeResults(results, outputFile):
     outputfile.close()
 
 def printJsonStdout(results):
-    print('\n')
     print(json.dumps(results))
-    print('\n')
-
 
 
 def loadNameServersFile(nameserversFile):
-    print('Loading the nameservers that are to be queried.')
+    if args.verbose:
+        print('Loading the nameservers that are to be queried.')
     
     dnsNameServers = []
     
@@ -38,11 +36,12 @@ def loadNameServersFile(nameserversFile):
     nameServerFile = open(nameserversFile, "r", encoding="utf-8")
 
     for line in nameServerFile:
-        print(line.rstrip('\n'), end=' ')
+        if args.verbose:
+            print(line.rstrip('\n'), end=' ')
         dnsNameServers.append(line.rstrip('\n'))
-    
-    print()
-    #print(dnsNameServers)
+    if args.verbose:
+        print()
+
     return dnsNameServers
 
 
@@ -54,17 +53,20 @@ def loadQueriesFile(queriesFile):
         print('I cannot find file ' + queriesFile)
         sys.exit(1)
 
-    print('Loading queries from ' + queriesFile)
+    if args.verbose:
+        print('Loading queries from ' + queriesFile)
 
     
 
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
     for line in queryFile:
-        print(line.rstrip('\n'),end=' ')
+        if args.verbose:
+            print(line.rstrip('\n'),end=' ')
         queries.append(line.rstrip('\n'))
     
-    print()
+    if args.verbose:
+        print()
 
     queryFile.close()
 
@@ -107,7 +109,7 @@ def performQueries(nameservers, queries):
     for server in nameservers:
         resolver.nameservers = [server]
         for query in queries:
-            if not args.verbose:
+            if args.verbose:
                 print('Query count = ' + str(counter))
 
             queryStartTime = datetime.now()
@@ -175,7 +177,7 @@ def parseArguments():
     parser.add_argument('--ifquery', default='queries.txt',
                         help='List of queries to be performed.')
 
-    parser.add_argument('--ofresults', default='output.json',
+    parser.add_argument('--ofresults', action='store_true',
                         help='JSON results output file')
 
     parser.add_argument('--jsonstdout', action='store_true',
@@ -196,22 +198,25 @@ def main():
     parseArguments()
     
     scriptStartTime = datetime.utcnow()
-    print('Script start time: ', str(scriptStartTime), '\n')
+    if args.verbose:
+        print('Script start time: ', str(scriptStartTime), '\n')
         
     
     queryFile = args.ifquery
     nameserversFile = args.ifname
-    outputFileResults = args.ofresults
+    outputFileResults = 'output.json'
     
     queries = loadQueriesFile(queryFile)
     nameservers = loadNameServersFile(nameserversFile)
     
     results = performQueries(nameservers,queries)
 
-    displayResults(results)
+    if args.verbose:
+        displayResults(results)
 
     scriptEndTime = datetime.utcnow()
-    print('\nScript stop time: ', str(scriptEndTime))
+    if args.verbose:
+        print('\nScript stop time: ', str(scriptEndTime))
     
     myData = gatherData(results,str(scriptStartTime),str(scriptEndTime))
     
