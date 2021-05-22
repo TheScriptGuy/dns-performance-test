@@ -8,6 +8,13 @@ For the UUID, when the script runs for it's initial attempt, it'll try and see i
 * If there is a uuid.cfg file, it'll read the contents and use that for identification.
 * if there is not a uuid.cfg file, it'll create a new uuid and write that to uuid.cfg.
 
+If you want to tag your results for aggregating data across multiple devices, create a 'tag.cfg' file in the same working directory as dns-resolution-test.py and insert a label. For example:
+```bash
+echo "production" > tag.cfg
+```
+
+If there's no tag.cfg file, then deviceTag in the output.json file is "".
+
 By default, it'll read the inputs from filenames:
 - nameservers.txt - list of DNS nameservers to query
 - queries.txt - list of queries to perform on the DNS nameservers.
@@ -20,6 +27,7 @@ If the argument '--ofresults' is added:
 {
   "deviceUuid": "<UUID>",
   "hostName": "<HOSTNAME>",
+  "deviceTag": "<DEVICETAG>",
   "scriptUTCStartTime": "<Script start time in UTC Format>",
   "scriptUTCEndTime": "<Script end time in UTC Format>",
   "queryResults": {
@@ -60,6 +68,7 @@ Sample result:
 {
   "deviceUuid": "c166d274-2fca-42c2-9a26-d1887ca97bb2",
   "hostName": "myTestHost",
+  "deviceTag": "production",
   "scriptStartTime": "2021-05-22 20:25:49.706083",
   "scriptEndTime": "2021-05-22 20:25:49.748855",
   "queryResults": {
@@ -99,7 +108,6 @@ Future improvements:
 * ability to download nameservers and queries from a URL
 * ability to publish the output to a webserver somewhere (HTTP POST)
 * ability to perform different types of nameservers queries (A, PTR, CNAME, MX, COA, NS)
-* ability to tag results for aggregating across multiple devices
 * ability to create excel spreadsheet with all tests.
     * extending this to perform conditional highlighting of cells with large latency (>100ms)
     * highlight responseTime results that are beyond a certain threshold compared to other results.
