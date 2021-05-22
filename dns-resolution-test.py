@@ -1,5 +1,5 @@
 # DNS Performance Testing
-# Version:            0.08
+# Version:            0.09
 # Last updated:       2021-05-22
 
 import sys
