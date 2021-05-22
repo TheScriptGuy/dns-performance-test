@@ -1,6 +1,6 @@
 # DNS Performance Testing
-# Version:            0.07
-# Last updated:       2021-05-20
+# Version:            0.08
+# Last updated:       2021-05-22
 
 import sys
 import argparse
@@ -9,6 +9,8 @@ import dns.resolver
 from datetime import datetime, timedelta
 import os.path
 from os import path
+
+from systemInfo import systemInfo
 
 def writeResults(results, outputFile):
     outputfile = open(outputFile,"w",encoding="utf-8")
@@ -148,6 +150,18 @@ def performQueries(nameservers, queries):
 
     return results
 
+def gatherData(queryResults,scriptStartTime,scriptEndTime):
+    myInfo = systemInfo.systemInfo()
+
+    myData = {
+        "deviceUuid": myInfo.uuid,
+        "hostName": myInfo.hostname,
+        "scriptUTCStartTime": scriptStartTime,
+        "scriptUTCEndTime": scriptEndTime,
+        "queryResults": queryResults
+    }
+
+    return myData
 
 def parseArguments():
 
@@ -181,13 +195,13 @@ def main():
     
     parseArguments()
     
-    timenow = datetime.utcnow()
-    print('Script start time: ', str(timenow), '\n')
+    scriptStartTime = datetime.utcnow()
+    print('Script start time: ', str(scriptStartTime), '\n')
         
     
     queryFile = args.ifquery
     nameserversFile = args.ifname
-    outputResults = args.ofresults
+    outputFileResults = args.ofresults
     
     queries = loadQueriesFile(queryFile)
     nameservers = loadNameServersFile(nameserversFile)
@@ -196,15 +210,17 @@ def main():
 
     displayResults(results)
 
+    scriptEndTime = datetime.utcnow()
+    print('\nScript stop time: ', str(scriptEndTime))
+    
+    myData = gatherData(results,str(scriptStartTime),str(scriptEndTime))
+    
     if args.jsonstdout:
-        printJsonStdout(results)
-
+        printJsonStdout(myData)
     
     if args.ofresults:
-        writeResults(results,outputResults)
+        writeResults(myData,outputFileResults)
 
-    timenow = datetime.utcnow()
-    print('\nScript stop time: ', str(timenow))
 
 
 
@@ -221,4 +237,3 @@ if __name__ == '__main__':
             sys.exit(0)
         except SystemExit:
             os._exit(0)
-

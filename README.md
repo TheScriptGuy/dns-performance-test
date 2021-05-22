@@ -2,6 +2,12 @@
 
 This script will query DNS servers with a provided query list and measure the response time.
 
+In order to track multiple results from different hosts, the hostname and a unique ID is gathered from each host where the script runs.
+
+For the UUID, when the script runs for it's initial attempt, it'll try and see if there's a uuid.cfg file. 
+* If there is a uuid.cfg file, it'll read the contents and use that for identification.
+* if there is not a uuid.cfg file, it'll create a new uuid and write that to uuid.cfg.
+
 By default, it'll read the inputs from filenames:
 - nameservers.txt - list of DNS nameservers to query
 - queries.txt - list of queries to perform on the DNS nameservers.
@@ -9,64 +15,82 @@ By default, it'll read the inputs from filenames:
 If the argument '--ofresults' is added:
 - output.json - the results of querying all the nameservers and their response times in JSON format.
 
-```json
-{  
-   "dnsNameServerIP": [
-    {
-      "query": "hostname.example",
-      "response": [
-        "<IP1>",
-        "<IP2>",
-      ],
-      "responseTime": "<Time in Milliseconds for response>"
-    },
-    {
-      "query": "hostname2.example",
-      "response": [
-        "<IP1>",
-        "<IP2>",
-        "<IP3>",
-        "<IP4>"
-      ],
-      "responseTime": "<Time in Milliseconds for response>"
-    }
-  ]
-}
 
+```json
+{
+  "deviceUuid": "<UUID>",
+  "hostName": "<HOSTNAME>",
+  "scriptUTCStartTime": "<Script start time in UTC Format>",
+  "scriptUTCEndTime": "<Script end time in UTC Format>",
+  "queryResults": {
+    "dnsNameServerIP": [
+      {
+        "query": "hostname.example",
+        "response": [
+          "<IP1>"
+        ],
+        "responseTime": "<Time in Milliseconds for response>"
+      },
+      {
+        "query": "hostname2.example2",
+        "response": [
+          "<IP1>",
+          "<IP2>"
+        ],
+        "responseTime": "<Time in Millseconds for response>"
+      },
+      {
+        "query": "hostname3.example3",
+        "response": [
+          "<IP1>",
+          "<IP2>",
+          "<IP3>",
+          "<IP4>"
+        ],
+        "responseTime": "<Time in Millseconds for response>"
+      }
+    ]
+  }
+}
 ```
 
 Sample result:
 
 ```json
 {
-  "8.8.8.8": [
-    {
-      "query": "test.com",
-      "response": [
-        "69.172.200.235"
-      ],
-      "responseTime": "7.3"
-    },
-    {
-      "query": "google.com",
-      "response": [
-        "216.58.217.46"
-      ],
-      "responseTime": "6.6"
-    },
-    {
-      "query": "abc.com",
-      "response": [
-        "99.84.79.64",
-        "99.84.79.93",
-        "99.84.79.91",
-        "99.84.79.12"
-      ],
-      "responseTime": "39.9"
-    }
-  ]
+  "deviceUuid": "c166d274-2fca-42c2-9a26-d1887ca97bb2",
+  "hostName": "myTestHost",
+  "scriptStartTime": "2021-05-22 20:25:49.706083",
+  "scriptEndTime": "2021-05-22 20:25:49.748855",
+  "queryResults": {
+    "8.8.8.8": [
+      {
+        "query": "test.com",
+        "response": [
+          "69.172.200.235"
+        ],
+        "responseTime": "7.1"
+      },
+      {
+        "query": "google.com",
+        "response": [
+          "142.250.217.110"
+        ],
+        "responseTime": "13.3"
+      },
+      {
+        "query": "abc.com",
+        "response": [
+          "99.84.73.44",
+          "99.84.73.60",
+          "99.84.73.41",
+          "99.84.73.70"
+        ],
+        "responseTime": "21.8"
+      }
+    ]
+  }
 }
-
 ```
 
 
@@ -76,9 +100,6 @@ Future improvements:
 * ability to publish the output to a webserver somewhere (HTTP POST)
 * ability to perform different types of nameservers queries (A, PTR, CNAME, MX, COA, NS)
 * ability to tag results for aggregating across multiple devices
-* include script start and end time into json results
-* ability to add hostname of host where script is executing
-    * need to try and figure out a way to create a unique identifier so that you can have devices with the same hostname reporting in.
 * ability to create excel spreadsheet with all tests.
     * extending this to perform conditional highlighting of cells with large latency (>100ms)
     * highlight responseTime results that are beyond a certain threshold compared to other results.

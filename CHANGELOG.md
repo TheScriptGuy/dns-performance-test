@@ -2,6 +2,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.08 - 2021-05-22
+### Added
+Added script start and end time (UTC format) to json results.
+Added hostname gathering feature to json results
+Added UUID creation feature to track results across multiple devices.
+
 ## 0.07 - 2021-05-20
 
 ### Added
