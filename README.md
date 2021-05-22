@@ -19,9 +19,17 @@ By default, it'll read the inputs from filenames:
 - nameservers.txt - list of DNS nameservers to query
 - queries.txt - list of queries to perform on the DNS nameservers.
 
-If the argument '--ofresults' is added:
-- output.json - the results of querying all the nameservers and their response times in JSON format.
+It will also by default not create any output (file, stdout, other).
 
+If you want output there are some options available (in any combination):
+```
+--ofresults  --> this will send results of querying nameservers, results, response times, and system info into output.json file
+--verbose    --> this will display all results to stdout
+--jsonstdout --> this will display the json formatted results to stdout
+```
+
+
+## JSON Sample format
 
 ```json
 {
@@ -62,7 +70,7 @@ If the argument '--ofresults' is added:
 }
 ```
 
-Sample result:
+## Actual Sample Result:
 
 ```json
 {
