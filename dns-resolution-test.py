@@ -1,5 +1,5 @@
 # DNS Performance Testing
-# Version:            0.10
+# Version:            0.11
 # Last updated:       2021-05-22
 
 import sys
@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import os.path
 from os import path
 
-from systemInfo import systemInfo
+from systemInfo import systemInfo,systemData
 
 def writeResults(results, outputFile):
     outputfile = open(outputFile,"w",encoding="utf-8")
@@ -154,9 +154,15 @@ def performQueries(nameservers, queries):
 
 def gatherData(queryResults,scriptStartTime,scriptEndTime):
     myInfo = systemInfo.systemInfo()
+    
+    if myInfo.uuid == "":
+        n = systemData.systemData()
+        n.createUuidIfNotExist()
+        myInfo.uuid = myInfo.getUuid()
 
     myData = {
         "deviceUuid": myInfo.uuid,
+        "deviceTag": myInfo.deviceTag,
         "hostName": myInfo.hostname,
         "scriptUTCStartTime": scriptStartTime,
         "scriptUTCEndTime": scriptEndTime,
@@ -186,6 +192,24 @@ def parseArguments():
     parser.add_argument('--verbose', action='store_true',
                         help='Displays the response times of all the tests.')
 
+    parser.add_argument('--setTag', default='',
+                        help='Set the tag for the query results. Creates tag.cfg file with tag.')
+
+    parser.add_argument('--deleteTag', action='store_true',
+                        help='Delete the tag file - tag.cfg')
+
+    parser.add_argument('--getTag', action='store_true',
+                        help='Get the tag from tag.cfg file')
+
+    parser.add_argument('--renewUuid', action='store_true',
+                        help='Renew the UUID value.')
+
+    parser.add_argument('--getUuid', action='store_true',
+                        help='Get the UUID value from uuid.cfg file.')
+
+    parser.add_argument('--deleteUuid', action='store_true',
+                        help='Remove the UUID value. Caution: when script runs again a new UUID will be generated.')
+
 
     global args
     args = parser.parse_args()
@@ -194,9 +218,38 @@ def parseArguments():
 
 def main():
     
-    
     parseArguments()
     
+    o = systemData.systemData()
+    myInfo = systemInfo.systemInfo()
+
+    if args.setTag:
+        o.setTag(args.setTag)
+        print('New tag set.')
+        sys.exit(0)
+
+    if args.getTag:
+        print(myInfo.getTag())
+        sys.exit(0)
+    
+    if args.deleteTag:
+        o.deleteTag()
+        sys.exit(0)
+
+    if args.getUuid:
+        print(myInfo.getUuid())
+        sys.exit(0)
+
+    if args.deleteUuid:
+        o.deleteUuid()
+        sys.exit(0)
+
+    if args.renewUuid:
+        o.deleteUuid()
+        o.createUuidIfNotExist()
+        sys.exit(0)
+
+
     scriptStartTime = datetime.utcnow()
     if args.verbose:
         print('Script start time: ', str(scriptStartTime), '\n')
