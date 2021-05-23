@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.10 - 2021-05-22
+### Added
+Added options for managing UUID and tag files.
+
+
+## 0.10 - 2021-05-22
 ### Changed
 Fixed logic for print results to files, stdout, etc.
 
