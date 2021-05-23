@@ -8,10 +8,11 @@ For the UUID, when the script runs for it's initial attempt, it'll try and see i
 * If there is a uuid.cfg file, it'll read the contents and use that for identification.
 * if there is not a uuid.cfg file, it'll create a new uuid and write that to uuid.cfg.
 
-If you want to tag your results for aggregating data across multiple devices, create a 'tag.cfg' file in the same working directory as dns-resolution-test.py and insert a label. For example:
+If you want to tag your results for aggregating data across multiple devices, do the following:
 ```bash
-echo "production" > tag.cfg
+python3 dns-resolution-test.py --setTag <TAGNAME>
 ```
+
 
 If there's no tag.cfg file, then deviceTag in the output.json file is "".
 
@@ -23,9 +24,17 @@ It will also by default not create any output (file, stdout, other).
 
 If you want output there are some options available (in any combination):
 ```
---ofresults  --> this will send results of querying nameservers, results, response times, and system info into output.json file
---verbose    --> this will display all results to stdout
---jsonstdout --> this will display the json formatted results to stdout
+  --ifname IFNAME    List of nameserver IP addresses file, each entry on a new line.
+  --ifquery IFQUERY  List of queries file to be performed, each entry on a new line.
+  --ofresults        JSON results output file (uuid,tag,script start time, script end time, results)
+  --jsonstdout       print results to stdout
+  --verbose          Displays the response times of all the tests.
+  --setTag SETTAG    Set the tag for the query results. Creates tag.cfg file with tag.
+  --deleteTag        Delete the tag file - tag.cfg
+  --getTag           Get the tag from tag.cfg file
+  --renewUuid        Renew the UUID value.
+  --getUuid          Get the UUID value from uuid.cfg file.
+  --deleteUuid       Remove the UUID value. Caution: when script runs again a new UUID will be generated.
 ```
 
 
