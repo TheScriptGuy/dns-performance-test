@@ -2,25 +2,58 @@
 
 This script will query DNS servers with a provided query list and measure the response time.
 
+## Device Identification
+
 In order to track multiple results from different hosts, the hostname and a unique ID is gathered from each host where the script runs.
 
 For the UUID, when the script runs for it's initial attempt, it'll try and see if there's a uuid.cfg file. 
 * If there is a uuid.cfg file, it'll read the contents and use that for identification.
 * if there is not a uuid.cfg file, it'll create a new uuid and write that to uuid.cfg.
 
+## UUID
+To read the current UUID for the device:
+```bash
+python3 dns-resolution-test.py --getUuid
+```
+
+To delete the UUID, ether remove the uuid.cfg file, or run the command:
+```bash
+python3 dns-resolution-test.py --deleteUuid
+```
+
+To renew/reset the UUID:
+```bash
+python3 dns-resolution-test.py --renewUuid
+```
+
+## Tags
+
 If you want to tag your results for aggregating data across multiple devices, do the following:
 ```bash
 python3 dns-resolution-test.py --setTag <TAGNAME>
 ```
 
-
 If there's no tag.cfg file, then deviceTag in the output.json file is "".
+
+If you want to remove the tag, either remove the tag.cfg file or:
+```bash
+python3 dns-resolution-test.py --deleteTag
+```
+
+To display the current tag:
+```bash
+python3 dns-resolution-test.py --getTag
+```
+
+## Reference files
 
 By default, it'll read the inputs from filenames:
 - nameservers.txt - list of DNS nameservers to query
 - queries.txt - list of queries to perform on the DNS nameservers.
 
-It will also by default not create any output (file, stdout, other).
+**It will also by default not create any output (file, stdout, other).**
+
+## Arguments
 
 If you want output there are some options available (in any combination):
 ```
