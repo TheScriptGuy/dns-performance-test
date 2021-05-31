@@ -1,6 +1,6 @@
 # DNS Performance Testing
-# Version:            0.11
-# Last updated:       2021-05-22
+# Version:            0.13
+# Last updated:       2021-05-29
 
 import sys
 import argparse
@@ -12,7 +12,12 @@ from os import path
 
 from systemInfo import systemInfo,systemData
 
+import requests
+
 def writeResults(results, outputFile):
+    """
+    Send the json data to the outputFile variable.
+    """
     outputfile = open(outputFile,"w",encoding="utf-8")
     
     outputfile.write(json.dumps(results)) 
@@ -20,12 +25,33 @@ def writeResults(results, outputFile):
     outputfile.close()
 
 def printJsonStdout(results):
+    """
+    This will output the json data to stdout.
+    """
     print(json.dumps(results))
+    print()
+
+def uploadJsonHTTP(url,jsonData):
+    """
+    This will upload the json data to a URL via a POST method.
+    If the verbose argument is set, it'll display what URL it's being 
+    submitted to as well as the json data (jsonData).
+    When the response is returned, it'll return the X-Headers that are sent back
+    from the server.
+    """   
+    x = requests.post(url, data = jsonData)
+    if args.verbose:
+        print('Submission URL: ', url)
+        print('jsonData: ', json.dumps(jsonData))
+        print('X-Headers: ',x.headers)
+    return x.headers
 
 
 def loadNameServersFile(nameserversFile):
-    if args.verbose:
-        print('Loading the nameservers that are to be queried.')
+    """
+    This will load the name servers from the file nameserversFile.
+    Each name server should be on it's own line.
+    """
     
     dnsNameServers = []
     
@@ -33,6 +59,9 @@ def loadNameServersFile(nameserversFile):
         print('I cannot find file ' + nameserversFile)
         sys.exit(1)
 
+    if args.verbose:
+        print('Loading the nameservers that are to be queried.')
+    
     nameServerFile = open(nameserversFile, "r", encoding="utf-8")
 
     for line in nameServerFile:
@@ -46,9 +75,16 @@ def loadNameServersFile(nameserversFile):
 
 
 def loadQueriesFile(queriesFile):
-
+    """
+    This will load the queries that need to be performed against each name server.
+    One query per line. Right now it's only meant to be for 'A' record resolutions.
+    """
     queries = []
 
+
+    """
+    Check to see if if the file exists. If not, exit with error code 1.
+    """
     if not path.exists(queriesFile):
         print('I cannot find file ' + queriesFile)
         sys.exit(1)
@@ -75,6 +111,10 @@ def loadQueriesFile(queriesFile):
 
 
 def displayResults(results):
+    """
+    This will display the results to stdout. Not always formatted correctly 
+    because the responses could have a variable number.
+    """
     headers = ['DNS Server','DNS Query', 'DNS Response', 'Response Time (ms)']
     print(*headers,sep='\t\t')
 
@@ -101,58 +141,99 @@ def displayResults(results):
 
 
 def performQueries(nameservers, queries):
+    """
+    This will perform all the all the queries against each nameserver.
+    """
+
+    # Set the resolver
     resolver = dns.resolver.Resolver()
+    # Set the results to empty dict
     results = {}
 
     counter = 1
 
+    totalQueries = len(nameservers) * len(queries)
+
     for server in nameservers:
+        # Set the name servers to a single list entry.
+        # We don't need multiple failover nameservers because we want 
+        # a result from each name server and want to point out any failures.
         resolver.nameservers = [server]
         for query in queries:
+            # Display the query count to keep track of progress.
             if args.verbose:
-                print('Query count = ' + str(counter))
+                print('Query count = ' + str(counter) + ' of ' + str(totalQueries))
 
+            # Start Query Time
             queryStartTime = datetime.now()
 
             try:
                 answer = resolver.resolve(query)
+
+            # If there's a timeout, display the timeout, which query and which nameserver
+            # typical timeout is 5.5s
             except dns.exception.Timeout:
                 print('DNS Timeout - ' + query + ' @' + server)
                 answer = []
 
+            # If there are no responses from name servers, display No Response.
+            # Also print the query and name servers.
             except dns.resolver.NoNameservers:
                 print('No response. ' + query + ' @' + server)
                 answer = []
 
+            # End query time. 
             queryEndTime = datetime.now()
+
+            # Calculate the difference between End Query Time and Start Query Time
+            # Multiply the result by a 1000 to get millisecond response.
             queryTime = (queryEndTime - queryStartTime).total_seconds() * 1000
 
+            # Format the queryTime response.
             s_queryTime = str("{:.1f}".format(queryTime))
             
             l_response = []
            
+            # If there were any answers from the query, append the response 
+            # to l_response.
+            # If there were any errors, add 'Err'
             if answer:
                 for response in answer:
                     l_response.append(response.address)
             else:
                 l_response.append('Err')
 
+            # If the server is not in the results, set the response to a blank list.
             if server not in results:
                 results[server] = []
 
             try:
-
+                # Create the json dict with all of the responses.
                 thisQuery = {"query": query, "response": l_response, "responseTime": s_queryTime}
                 results[server].append(thisQuery)
                 
                 counter += 1
 
             except KeyError:
+                # If there's some accidental programming error, then display error.
                 print('I made an oops.')
 
     return results
 
 def gatherData(queryResults,scriptStartTime,scriptEndTime):
+    """
+    This will collect all the data into a uniform data structure that can 
+    help with measuring results across multiple executions. 
+
+    Data that is included is:
+    * deviceUuid         - a unique device identifier.
+    * deviceTag          - a tag for the device to help with aggregating data across.
+                           multiple endpoints (for example all production, development, qa devices).
+    * hostName           - the hostname of the device where script is executing.
+    * scriptUTCStartTime - script start time (UTC format).
+    * scriptUTCEndTime   - script end time (UTC format).
+    * queryResults       - The results of all queries that were performed against the nameservers.  
+    """
     myInfo = systemInfo.systemInfo()
     
     if myInfo.uuid == "":
@@ -210,6 +291,8 @@ def parseArguments():
     parser.add_argument('--deleteUuid', action='store_true',
                         help='Remove the UUID value. Caution: when script runs again a new UUID will be generated.')
 
+    parser.add_argument('--httpPOST', default='',
+                        help='Upload the JSON results to the URL')
 
     global args
     args = parser.parse_args()
@@ -217,46 +300,61 @@ def parseArguments():
 
 
 def main():
-    
+    # Parse all the arguments
     parseArguments()
     
+    # Gather the information from the device where the script is executed.
     o = systemData.systemData()
     myInfo = systemInfo.systemInfo()
 
+    # If setTag argument is set, create the new Tag.
     if args.setTag:
         o.setTag(args.setTag)
         print('New tag set.')
         sys.exit(0)
 
+    # If getTag is set, it will grab the value in tag.cfg file.
     if args.getTag:
         print(myInfo.getTag())
         sys.exit(0)
     
+    # If deleteTag is set, it will delete the tag.cfg file.
     if args.deleteTag:
         o.deleteTag()
         sys.exit(0)
 
+    # If getUuid is set, it grab the value in uuid.cfg
     if args.getUuid:
         print(myInfo.getUuid())
         sys.exit(0)
 
+    # If deleteUuid is set, the uuid.cfg file will be deleted.
     if args.deleteUuid:
         o.deleteUuid()
         sys.exit(0)
 
+    # If renewUuid is set, first delete uuid.cfg file, then generate a new uuid.
     if args.renewUuid:
         o.deleteUuid()
         o.createUuidIfNotExist()
         sys.exit(0)
 
 
+    # Script start time (UTC format)
     scriptStartTime = datetime.utcnow()
+
+    # If verbose argument is set, display the script start time to stdout.
     if args.verbose:
         print('Script start time: ', str(scriptStartTime), '\n')
         
     
+    # Query file from ifquery argument
     queryFile = args.ifquery
+
+    # Nameserver file from ifname argument
     nameserversFile = args.ifname
+
+    # Results to be written to output.json
     outputFileResults = 'output.json'
     
     queries = loadQueriesFile(queryFile)
@@ -264,18 +362,30 @@ def main():
     
     results = performQueries(nameservers,queries)
 
+    # If verbose argument is parsed, display the results to stdout.
     if args.verbose:
         displayResults(results)
 
+    # Script end time (UTC format)
     scriptEndTime = datetime.utcnow()
+    
+    # If verbose argument is set, display script end time.
     if args.verbose:
         print('\nScript stop time: ', str(scriptEndTime))
     
+    # Collate all the data into myData
     myData = gatherData(results,str(scriptStartTime),str(scriptEndTime))
     
+    # If the httpPOST argument is set, send the json data to the URL via POST method
+    if args.httpPOST:
+        print(uploadJsonHTTP(args.httpPOST,myData))
+
+    # If the jsonstdout argument is set, then print myData to stdout.
     if args.jsonstdout:
         printJsonStdout(myData)
     
+    # If the ofresults is set, output the data to outputFileResults.
+    # Results will always be overwritten.
     if args.ofresults:
         writeResults(myData,outputFileResults)
 
@@ -287,7 +397,6 @@ if __name__ == '__main__':
         
         main()
 
-
     except KeyboardInterrupt:
         print('Interrupted')
         print
@@ -295,3 +404,4 @@ if __name__ == '__main__':
             sys.exit(0)
         except SystemExit:
             os._exit(0)
+
