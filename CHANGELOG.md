@@ -2,6 +2,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.13 - 2021-05-29
+### Added
+Improved code comments for better programming interpretation.
+
+## 0.12 - 2021-05-22
+### Added
+Added the ability to manage tags from device.
+
+## 0.11 - 2021-05-22
+### Changed
+Minor change logic around how arguments are parsed.
+
 ## 0.10 - 2021-05-22
 ### Added
 Added options for managing UUID and tag files.
