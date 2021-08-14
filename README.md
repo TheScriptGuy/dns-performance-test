@@ -159,5 +159,5 @@ Future improvements:
 * default list of nameservers and queries to be included in bundle
 * ability to download nameservers and queries from a URL
 * ability to publish the output to a webserver somewhere (HTTP POST)
-* ability to perform different types of nameservers queries (A, PTR, CNAME, MX, COA, NS)
+* ability to perform different types of nameservers queries (A, PTR, CNAME, MX, SOA, NS)
 * ability to publish results to google sheets, ms excel online, etc.
