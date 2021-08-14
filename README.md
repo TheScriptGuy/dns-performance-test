@@ -105,7 +105,8 @@ If you want output there are some options available (in any combination):
           "<IP3>",
           "<IP4>"
         ],
-        "responseTime": "<Time in Millseconds for response>"
+        "responseTime": "<Time in Millseconds for response>",
+        "responseTTL": <time in seconds from nameserver>
       }
     ]
   }
@@ -145,7 +146,8 @@ If you want output there are some options available (in any combination):
           "99.84.73.41",
           "99.84.73.70"
         ],
-        "responseTime": "21.8"
+        "responseTime": "21.8",
+        "responseTTL": 151
       }
     ]
   }
