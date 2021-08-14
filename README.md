@@ -106,7 +106,7 @@ If you want output there are some options available (in any combination):
           "<IP4>"
         ],
         "responseTime": "<Time in Millseconds for response>",
-        "responseTTL": <time in seconds from nameserver>
+        "responseTTL": <time_in_seconds_from_nameserver>
       }
     ]
   }
