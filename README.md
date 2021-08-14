@@ -87,7 +87,8 @@ If you want output there are some options available (in any combination):
         "response": [
           "<IP1>"
         ],
-        "responseTime": "<Time in Milliseconds for response>"
+        "responseTime": "<Time in Milliseconds for response>",
+        "responseTTL": <time_in_seconds_from_nameserver>
       },
       {
         "query": "hostname2.example2",
@@ -95,7 +96,8 @@ If you want output there are some options available (in any combination):
           "<IP1>",
           "<IP2>"
         ],
-        "responseTime": "<Time in Millseconds for response>"
+        "responseTime": "<Time in Millseconds for response>",
+        "responseTTL": <time_in_seconds_from_nameserver>
       },
       {
         "query": "hostname3.example3",
@@ -129,14 +131,16 @@ If you want output there are some options available (in any combination):
         "response": [
           "69.172.200.235"
         ],
-        "responseTime": "7.1"
+        "responseTime": "7.1",
+        "responseTTL": 311
       },
       {
         "query": "google.com",
         "response": [
           "142.250.217.110"
         ],
-        "responseTime": "13.3"
+        "responseTime": "13.3",
+        "responseTTL": 3429
       },
       {
         "query": "abc.com",
