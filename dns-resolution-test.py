@@ -1,6 +1,6 @@
 # DNS Performance Testing
-# Version:            0.13
-# Last updated:       2021-05-29
+# Version:            0.14
+# Last updated:       2021-08-14
 
 import sys
 import argparse
@@ -200,6 +200,8 @@ def performQueries(nameservers, queries):
             if answer:
                 for response in answer:
                     l_response.append(response.address)
+                a_responseTTL = answer.rrset.ttl
+
             else:
                 l_response.append('Err')
 
@@ -209,7 +211,7 @@ def performQueries(nameservers, queries):
 
             try:
                 # Create the json dict with all of the responses.
-                thisQuery = {"query": query, "response": l_response, "responseTime": s_queryTime}
+                thisQuery = {"query": query, "response": l_response, "responseTime": s_queryTime, "responseTTL": a_responseTTL}
                 results[server].append(thisQuery)
                 
                 counter += 1
