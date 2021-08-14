@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.14 - 2021-8-14
+### Added
+Included response time-to-live (TTL) from name server.
+
 ## 0.13 - 2021-05-29
 ### Added
 Improved code comments for better programming interpretation.
