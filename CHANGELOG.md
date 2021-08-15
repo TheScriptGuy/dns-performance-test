@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.17 - 2021-08-15
+### Added
+Added the ability to download nameservers and queries entries from a webserver (both HTTP and HTTPS)
+
 ## 0.16 - 2021-08-14
 ### Added
 Allows the ability to upload the json data through the HTTP POST method.
