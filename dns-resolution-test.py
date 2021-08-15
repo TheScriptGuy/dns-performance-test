@@ -1,5 +1,5 @@
 # DNS Performance Testing
-# Version:            0.15
+# Version:            0.16
 # Last updated:       2021-08-14
 
 import sys
@@ -39,7 +39,7 @@ def uploadJsonHTTP(url,jsonData):
     When the response is returned, it'll return the X-Headers that are sent back
     from the server.
     """   
-    x = requests.post(url, data = jsonData)
+    x = requests.post(url, json = jsonData)
     if args.verbose:
         print('Submission URL: ', url)
         print('jsonData: ', json.dumps(jsonData))
