@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.17 - 2021-08-15
 ### Added
-Added the ability to download nameservers and queries entries from a webserver (both HTTP and HTTPS)
+Added the ability to download nameservers and queries entries from a webserver (both HTTP and HTTPS). I have not added support for error handling when the hostname in the URL is invalid.
 
 ## 0.16 - 2021-08-14
 ### Added
