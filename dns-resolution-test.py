@@ -1,5 +1,5 @@
 # DNS Performance Testing
-# Version:            0.14
+# Version:            0.15
 # Last updated:       2021-08-14
 
 import sys
@@ -203,6 +203,7 @@ def performQueries(nameservers, queries):
                 a_responseTTL = answer.rrset.ttl
 
             else:
+                a_responseTTL = -1
                 l_response.append('Err')
 
             # If the server is not in the results, set the response to a blank list.
