@@ -57,17 +57,18 @@ By default, it'll read the inputs from filenames:
 
 If you want output there are some options available (in any combination):
 ```
-  --ifname IFNAME    List of nameserver IP addresses file, each entry on a new line.
-  --ifquery IFQUERY  List of queries file to be performed, each entry on a new line.
-  --ofresults        JSON results output file (uuid,tag,script start time, script end time, results)
-  --jsonstdout       print results to stdout
-  --verbose          Displays the response times of all the tests.
-  --setTag SETTAG    Set the tag for the query results. Creates tag.cfg file with tag.
-  --deleteTag        Delete the tag file - tag.cfg
-  --getTag           Get the tag from tag.cfg file
-  --renewUuid        Renew the UUID value.
-  --getUuid          Get the UUID value from uuid.cfg file.
-  --deleteUuid       Remove the UUID value. Caution: when script runs again a new UUID will be generated.
+  --ifname IFNAME      List of nameserver IP addresses file, each entry on a new line.
+  --ifquery IFQUERY    List of queries file to be performed, each entry on a new line.
+  --ofresults          JSON results output file (uuid,tag,script start time, script end time, results)
+  --jsonstdout         print results to stdout
+  --verbose            Displays the response times of all the tests.
+  --setTag SETTAG      Set the tag for the query results. Creates tag.cfg file with tag.
+  --deleteTag          Delete the tag file - tag.cfg
+  --getTag             Get the tag from tag.cfg file
+  --renewUuid          Renew the UUID value.
+  --getUuid            Get the UUID value from uuid.cfg file.
+  --deleteUuid         Remove the UUID value. Caution: when script runs again a new UUID will be generated.
+  --httpPOST HTTPPOST  Upload the JSON results to the URL
 ```
 
 
@@ -162,6 +163,5 @@ If you want output there are some options available (in any combination):
 Future improvements:
 * default list of nameservers and queries to be included in bundle
 * ability to download nameservers and queries from a URL
-* ability to publish the output to a webserver somewhere (HTTP POST)
 * ability to perform different types of nameservers queries (A, PTR, CNAME, MX, SOA, NS)
 * ability to publish results to google sheets, ms excel online, etc.
