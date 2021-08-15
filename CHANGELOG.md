@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.16 - 2021-08-14
+### Fixed
+Fixed an issue with the HTTP POST method and posting json data.
+
 ## 0.15 - 2021-08-14
 ### Fixed
 Fixed a minor bug with a_responseTTL variable and a DNS nameserver response timing out.
