@@ -1,6 +1,6 @@
 # DNS Performance Testing
-# Version:            0.16
-# Last updated:       2021-08-14
+# Version:            0.17
+# Last updated:       2021-08-15
 
 import sys
 import argparse
@@ -46,6 +46,40 @@ def uploadJsonHTTP(url,jsonData):
         print('X-Headers: ',x.headers)
     return x.headers
 
+def getFileFromURL(fileURL):
+    """
+    This function will download the contents of fileURL and return a list with the contents.
+    """
+    tmpData = []
+    try:
+        urlData = requests.get(fileURL)
+        if urlData.status_code == 200:
+            tmpData = urlData.text.split('\n')
+            try:
+                """
+                Attempt to remove any blank entries in the dict
+                """
+                tmpData.remove('')
+            except ValueError:
+                """
+                Do nothing
+                """
+        else:
+            tmpData = ['Error while retrieving URL']
+    except socket.gaierror:
+        print('Invalid hostname')
+        tmpData = ['URL error']
+    except requests.exceptions.Timeout:
+        print('Timeout while retrieving URL.')
+        tmpData = ['URL Timeout']
+    except requests.exceptions.TooManyRedirects:
+        print('Too many redirects while accessing the URL')
+        tmpData = ['URL Redirects too many']
+    except requests.exceptions.ConnectionError:
+        print('Could not connect to URL - ' + fileURL + '\n')
+        tmpData = ['URL connection error']
+    return tmpData
+
 
 def loadNameServersFile(nameserversFile):
     """
@@ -55,6 +89,15 @@ def loadNameServersFile(nameserversFile):
     
     dnsNameServers = []
     
+    """
+    Check to see if nameserversFile is a URL and if it is, attempt to download it
+    """
+
+    if nameserversFile.startswith('http://') or nameserversFile.startswith('https://'):
+        dnsnameServers = getFileFromURL(nameserversFile)
+        return dnsnameServers
+   
+
     if not path.exists(nameserversFile):
         print('I cannot find file ' + nameserversFile)
         sys.exit(1)
@@ -80,6 +123,14 @@ def loadQueriesFile(queriesFile):
     One query per line. Right now it's only meant to be for 'A' record resolutions.
     """
     queries = []
+
+
+    """
+    Check to see if queriesFile is a URL and if it is, attempt to download it
+    """
+    if queriesFile.startswith('http://') or queriesFile.startswith('https://'):
+        queries = getFileFromURL(queriesFile)
+        return queries
 
 
     """
