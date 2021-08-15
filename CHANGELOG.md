@@ -3,8 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.16 - 2021-08-14
-### Fixed
-Fixed an issue with the HTTP POST method and posting json data.
+### Added
+Allows the ability to upload the json data through the HTTP POST method.
 
 ## 0.15 - 2021-08-14
 ### Fixed
