@@ -2,7 +2,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 0.14 - 2021-8-14
+## 0.15 - 2021-08-14
+### Fixed
+Fixed a minor bug with a_responseTTL variable and a DNS nameserver response timing out.
+
+## 0.14 - 2021-08-14
 ### Added
 Included response time-to-live (TTL) from name server.
 
