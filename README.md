@@ -57,8 +57,8 @@ By default, it'll read the inputs from filenames:
 
 If you want output there are some options available (in any combination):
 ```
-  --ifname IFNAME      List of nameserver IP addresses file, each entry on a new line.
-  --ifquery IFQUERY    List of queries file to be performed, each entry on a new line.
+  --ifname IFNAME      List of nameserver IP addresses file, each entry on a new line. This can be a URL as well.
+  --ifquery IFQUERY    List of queries file to be performed, each entry on a new line. This can be a URL as well.
   --ofresults          JSON results output file (uuid,tag,script start time, script end time, results)
   --jsonstdout         print results to stdout
   --verbose            Displays the response times of all the tests.
@@ -162,6 +162,5 @@ If you want output there are some options available (in any combination):
 
 Future improvements:
 * default list of nameservers and queries to be included in bundle
-* ability to download nameservers and queries from a URL
 * ability to perform different types of nameservers queries (A, PTR, CNAME, MX, SOA, NS)
 * ability to publish results to google sheets, ms excel online, etc.
