@@ -1,6 +1,8 @@
 # DNS Performance Testing
-# Version:            0.17
-# Last updated:       2021-08-15
+# Version:            0.18
+# Last updated:       2021-08-22
+
+scriptVersion = "0.18"
 
 import sys
 import argparse
@@ -13,6 +15,9 @@ from os import path
 from systemInfo import systemInfo,systemData
 
 import requests
+
+# Global Variables
+dnsResponseTextMaxLength = 0
 
 def writeResults(results, outputFile):
     """
@@ -148,14 +153,22 @@ def loadQueriesFile(queriesFile):
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
     for line in queryFile:
+        if "," in line:
+            tmpLine = line.rstrip('\n').split(',')
+            queries.append({tmpLine[1]: tmpLine[0]})
+        else:
+            queries.append({'a': line.rstrip('\n')})
+        
         if args.verbose:
             print(line.rstrip('\n'),end=' ')
-        queries.append(line.rstrip('\n'))
+        
     
     if args.verbose:
         print()
+        print(queries)
 
     queryFile.close()
+
 
     return queries
 
@@ -166,28 +179,89 @@ def displayResults(results):
     This will display the results to stdout. Not always formatted correctly 
     because the responses could have a variable number.
     """
-    headers = ['DNS Server','DNS Query', 'DNS Response', 'Response Time (ms)']
-    print(*headers,sep='\t\t')
 
+    # Get the global variable dnsResponseTextMaxLength
+    global dnsResponseTextMaxLength
+    filler = ' '
+
+    if args.verbose:
+        print("dnsResponseTextMaxLength = ", dnsResponseTextMaxLength)
+
+    headers = ['DNS Server','DNS Type','DNS Query', 'DNS Response', 'Response Time (ms)','DNS TTL']
+
+    """
+    DNS Column lengths
+    """
+    dnsServerLength = 18
+    dnsQueryTypeLength = 15
+    dnsQueryLength = 30
+    dnsResponseTextMaxLength += 10
+    dnsResponseTimeLength = 20
+    dnsResponseTTLLength = 8
+
+
+
+    """
+    Print the headers with appropriate spacing.
+    """
+
+    for count,item in enumerate(headers):
+        if count == 0:
+            # DNS Server
+            print(f'{item:{filler}<{dnsServerLength}}',end='')
+
+        if count == 1: 
+            # DNS Type
+            print(f'{item:{filler}<{dnsQueryTypeLength}}',end='')
+
+        if count == 2:
+            # DNS Query
+            print(f'{item:{filler}<{dnsQueryLength}}',end='')
+
+        if count == 3:
+            # DNS Response
+            print(f'{item:{filler}<{dnsResponseTextMaxLength}}', end='')
+
+        if count == 4:
+            # Response Time (ms)
+            print(f'{item:{filler}<{dnsResponseTimeLength}}',end='')
+
+        if count == 5:
+            # DNS TTL
+            print(f'{item:{filler}<{dnsResponseTTLLength}}',end='')
+
+
+    print()
+
+    """
+    Iterate through the response data and format the columns with appropriate spaces.
+    """
     for nameserverItem in results:
 
         for dataItem in results[nameserverItem]:
-            print('{: <15}'.format(nameserverItem),end=' ')
+            print(f'{nameserverItem:{filler}<{dnsServerLength}}',end='')
+
             for dataItem2 in dataItem:
+                #print(str(dataItem[dataItem2]))
                 if dataItem2 == 'query':
-                    print('\t{: <23}'.format(dataItem[dataItem2]), end=' ')
+                    queryType = list(dataItem[dataItem2].items())[0][0]
+                    queryName = list(dataItem[dataItem2].items())[0][1]
+                    print(f'{queryType:{filler}<{dnsQueryTypeLength}}', end='')
+                    print(f'{queryName:{filler}<{dnsQueryLength}}', end='')
+
                 if dataItem2 == 'response':
-                    for i,responseItem in enumerate(dataItem[dataItem2]):
-                        if i:
-                            print(',',end='')
-                        print('{}'.format(responseItem), end='')
+                    dnsElements = list(dataItem[dataItem2])
+
+                    dnsResponseFormatted = ','.join(dnsElements)
+                    print(f'{dnsResponseFormatted:{filler}<{dnsResponseTextMaxLength}}',end='')
+
                 if dataItem2 == 'responseTime':
-                    print('\t\t{}'.format(dataItem[dataItem2]))
+                    responseTime = dataItem[dataItem2]
+                    print(f'{responseTime:{filler}<{dnsResponseTimeLength}}',end='')
 
-
-    #print('{: <24}{: <24}{}\t\t{:.1f}'.format(server,query,response,queryTime))
-
-
+                if dataItem2 == 'responseTTL':
+                    responseTTL = dataItem[dataItem2]
+                    print(f'{responseTTL:{filler}<{dnsResponseTTLLength}}')
 
 
 
@@ -205,6 +279,9 @@ def performQueries(nameservers, queries):
 
     totalQueries = len(nameservers) * len(queries)
 
+    # Get the global variable dnsResponseTextMaxLength
+    global dnsResponseTextMaxLength
+
     for server in nameservers:
         # Set the name servers to a single list entry.
         # We don't need multiple failover nameservers because we want 
@@ -212,25 +289,47 @@ def performQueries(nameservers, queries):
         resolver.nameservers = [server]
         for query in queries:
             # Display the query count to keep track of progress.
+            queryType = list(query.items())[0][0].lower()
+            queryName = list(query.items())[0][1].lower()
+
             if args.verbose:
+                print('Query = ' + str(query))
                 print('Query count = ' + str(counter) + ' of ' + str(totalQueries))
 
             # Start Query Time
             queryStartTime = datetime.now()
 
             try:
-                answer = resolver.resolve(query)
-
+                if queryType == "ptr":
+                    answer = resolver.resolve_address(queryName)
+                else:
+                    answer = resolver.resolve(queryName,queryType)
+            
             # If there's a timeout, display the timeout, which query and which nameserver
             # typical timeout is 5.5s
-            except dns.exception.Timeout:
-                print('DNS Timeout - ' + query + ' @' + server)
+
+            except dns.rdatatype.UnknownRdatatype:
+                print('Unkown DNS response - ' + str(query) + ' @' + server)
                 answer = []
 
-            # If there are no responses from name servers, display No Response.
-            # Also print the query and name servers.
+            except dns.resolver.NoAnswer:
+                # No answer from DNS server
+                print('No DNS answer - ' + str(query) + ' @' + server)
+                answer = []
+
+            except dns.exception.Timeout:
+                # DNS Server timed out
+                print('DNS Timeout - ' + str(query) + ' @' + server)
+                answer = []
+
+            except dns.resolver.NXDOMAIN:
+                # NXDOMAIN response from DNS server
+                print('NXDOMAIN response - ' + str(query) + ' @' + server)
+                answer = []
+
             except dns.resolver.NoNameservers:
-                print('No response. ' + query + ' @' + server)
+                # If there are no responses from name servers, display No Response.
+                print('No response. ' + str(query) + ' @' + server)
                 answer = []
 
             # End query time. 
@@ -249,13 +348,60 @@ def performQueries(nameservers, queries):
             # to l_response.
             # If there were any errors, add 'Err'
             if answer:
-                for response in answer:
-                    l_response.append(response.address)
-                a_responseTTL = answer.rrset.ttl
+                if queryType == "a" or queryType == "aaaa":
+                    for response in answer:
+                        aResponse = response.address
+                        l_response.append(aResponse)
+                        currentLength = len(str(aResponse))
+                        if dnsResponseTextMaxLength < currentLength:
+                            dnsResponseTextMaxLength = currentLength
 
+                if queryType == "mx":
+                    for response in answer:
+                        mxResponse = response.to_text()
+                        l_response.append(mxResponse)
+                        currentLength = len(str(mxResponse))
+                        if dnsResponseTextMaxLength < currentLength:
+                            dnsResponseTextMaxLength = currentLength
+
+                if queryType == "ptr":
+                    for response in answer:
+                        ptrResponse = response.to_text()
+                        l_response.append(ptrResponse)
+                        currentLength = len(str(ptrResponse))
+                        if dnsResponseTextMaxLength < currentLength:
+                            dnsResponseTextMaxLength = currentLength
+                            
+                if queryType == "soa":
+                    for response in answer:
+                        soaResponse = response.to_text().split(' ')[0]
+                        l_response.append(soaResponse)
+                        currentLength = len(str(soaResponse))
+                        if dnsResponseTextMaxLength < currentLength:
+                            dnsResponseTextMaxLength = currentLength
+
+                if queryType == "cname":
+                    for response in answer:
+                        cnameResponse = response.to_text()
+                        l_response.append(cnameResponse)
+                        currentLength = len(str(cnameResponse))
+                        if dnsResponseTextMaxLength < currentLength:
+                            dnsResponseTextMaxLength = currentLength
+
+                if queryType == "ns":
+                    for response in answer:
+                        nsResponse = response.to_text()
+                        l_response.append(nsResponse)
+                        currentLength = len(str(nsResponse))
+                        if dnsResponseTextMaxLength < currentLength:
+                            dnsResponseTextMaxLength = currentLength
+
+                a_responseTTL = answer.rrset.ttl
             else:
                 a_responseTTL = -1
                 l_response.append('Err')
+                if dnsResponseTextMaxLength < 3:
+                    dnsResponseTextMaxLength = 4
 
             # If the server is not in the results, set the response to a blank list.
             if server not in results:
@@ -301,6 +447,7 @@ def gatherData(queryResults,scriptStartTime,scriptEndTime):
         "hostName": myInfo.hostname,
         "scriptUTCStartTime": scriptStartTime,
         "scriptUTCEndTime": scriptEndTime,
+        "dataFormatVersion": 3,
         "queryResults": queryResults
     }
 
@@ -310,6 +457,7 @@ def parseArguments():
 
     # Instantiate the parser
     parser = argparse.ArgumentParser(description='DNS Performance testing')
+
 
     # Optional arguments
     parser.add_argument('--ifname', default="nameservers.txt",
@@ -323,6 +471,9 @@ def parseArguments():
 
     parser.add_argument('--jsonstdout', action='store_true',
                         help='print results to stdout')
+
+    parser.add_argument('--displayResponses', action='store_true',
+                        help='Display formatted results')
 
     parser.add_argument('--verbose', action='store_true',
                         help='Displays the response times of all the tests.')
@@ -351,16 +502,11 @@ def parseArguments():
     global args
     args = parser.parse_args()
 
+    if args.verbose:
+        print("Script version: " + scriptVersion)
 
-
-def main():
-    # Parse all the arguments
-    parseArguments()
-    
-    # Gather the information from the device where the script is executed.
-    o = systemData.systemData()
-    myInfo = systemInfo.systemInfo()
-
+def defineInfoArguments():
+    global args
     # If setTag argument is set, create the new Tag.
     if args.setTag:
         o.setTag(args.setTag)
@@ -371,7 +517,7 @@ def main():
     if args.getTag:
         print(myInfo.getTag())
         sys.exit(0)
-    
+
     # If deleteTag is set, it will delete the tag.cfg file.
     if args.deleteTag:
         o.deleteTag()
@@ -392,6 +538,17 @@ def main():
         o.deleteUuid()
         o.createUuidIfNotExist()
         sys.exit(0)
+
+
+def main():
+    # Parse all the arguments
+    parseArguments()
+    
+    # Gather the information from the device where the script is executed.
+    o = systemData.systemData()
+    myInfo = systemInfo.systemInfo()
+
+    defineInfoArguments()
 
 
     # Script start time (UTC format)
@@ -418,6 +575,9 @@ def main():
 
     # If verbose argument is parsed, display the results to stdout.
     if args.verbose:
+        print(results)
+    
+    if args.displayResponses:
         displayResults(results)
 
     # Script end time (UTC format)
