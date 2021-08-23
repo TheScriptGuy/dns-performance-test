@@ -53,6 +53,17 @@ By default, it'll read the inputs from filenames:
 
 **It will also by default not create any output (file, stdout, other).**
 
+The queries file will accept entries in the following formats:
+```
+test.com
+123.123.123.123,ptr
+abc.com,a
+cnn.com,mx
+google.com,aaaa
+```
+
+If an entry has an incorrect DNS query type, for example - referencing 'aaa' (invalid) instead of 'aaaa' (valid IPv6 query type), the program will not stop, but will report an error and continue to the next entry.
+
 ## Arguments
 
 If you want output there are some options available (in any combination):
@@ -61,6 +72,7 @@ If you want output there are some options available (in any combination):
   --ifquery IFQUERY    List of queries file to be performed, each entry on a new line. This can be a URL as well.
   --ofresults          JSON results output file (uuid,tag,script start time, script end time, results)
   --jsonstdout         print results to stdout
+  --displayResponses   Display formatted results
   --verbose            Displays the response times of all the tests.
   --setTag SETTAG      Set the tag for the query results. Creates tag.cfg file with tag.
   --deleteTag          Delete the tag file - tag.cfg
@@ -81,10 +93,13 @@ If you want output there are some options available (in any combination):
   "deviceTag": "<DEVICETAG>",
   "scriptUTCStartTime": "<Script start time in UTC Format>",
   "scriptUTCEndTime": "<Script end time in UTC Format>",
+  "dataFormatVersion": 3,
   "queryResults": {
     "dnsNameServerIP": [
       {
-        "query": "hostname.example",
+        "query": {
+          "queryType": "hostname.example"
+        },
         "response": [
           "<IP1>"
         ],
@@ -92,7 +107,9 @@ If you want output there are some options available (in any combination):
         "responseTTL": <time_in_seconds_from_nameserver>
       },
       {
-        "query": "hostname2.example2",
+        "query": {
+          "queryType": "hostname2.example2"
+        },
         "response": [
           "<IP1>",
           "<IP2>"
@@ -101,7 +118,9 @@ If you want output there are some options available (in any combination):
         "responseTTL": <time_in_seconds_from_nameserver>
       },
       {
-        "query": "hostname3.example3",
+        "query": {
+          "queryType": "hostname3.example3"
+        },
         "response": [
           "<IP1>",
           "<IP2>",
@@ -125,10 +144,13 @@ If you want output there are some options available (in any combination):
   "deviceTag": "production",
   "scriptStartTime": "2021-05-22 20:25:49.706083",
   "scriptEndTime": "2021-05-22 20:25:49.748855",
+  "dataFormatVersion": 3,
   "queryResults": {
     "8.8.8.8": [
       {
-        "query": "test.com",
+        "query": {
+          "a": "test.com"
+        },
         "response": [
           "69.172.200.235"
         ],
@@ -136,7 +158,9 @@ If you want output there are some options available (in any combination):
         "responseTTL": 311
       },
       {
-        "query": "google.com",
+        "query": {
+          "a": "google.com"
+        },
         "response": [
           "142.250.217.110"
         ],
@@ -144,7 +168,9 @@ If you want output there are some options available (in any combination):
         "responseTTL": 3429
       },
       {
-        "query": "abc.com",
+        "query": {
+          "a": "abc.com"
+        },
         "response": [
           "99.84.73.44",
           "99.84.73.60",
@@ -153,6 +179,16 @@ If you want output there are some options available (in any combination):
         ],
         "responseTime": "21.8",
         "responseTTL": 151
+      },
+      {
+        "query": {
+          "mx": "testdomain.com"
+        },
+        "response": [
+          "20 mail.testdomain.com.",
+          "20 mail2.testdomain.com.",
+          "30 mail3.testdomain.com."
+        ]   
       }
     ]
   }
@@ -162,5 +198,4 @@ If you want output there are some options available (in any combination):
 
 Future improvements:
 * default list of nameservers and queries to be included in bundle
-* ability to perform different types of nameservers queries (A, PTR, CNAME, MX, SOA, NS)
 * ability to publish results to google sheets, ms excel online, etc.
