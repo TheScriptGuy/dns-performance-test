@@ -2,6 +2,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.18 - 2021-08-22
+### Added
+Added the ability to resolve different DNS requests - SOA, NS, CNAME, A, AAAA, PTR, MX. By default an entry in queries file that doesn't have a DNS type will be assumed to be an 'A' record. Refer to readme for format of queries file.
+Added --displayResponses option with column formatting. 
+
+### Changed
+Updated the display results formatting when run from command line.
+
+
 ## 0.17 - 2021-08-15
 ### Added
 Added the ability to download nameservers and queries entries from a webserver (both HTTP and HTTPS). I have not added support for error handling when the hostname in the URL is invalid.
