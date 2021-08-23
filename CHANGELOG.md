@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## 0.18 - 2021-08-22
 ### Added
-Added the ability to resolve different DNS requests - SOA, NS, CNAME, A, AAAA, PTR, MX. By default an entry in queries file that doesn't have a DNS type will be assumed to be an 'A' record. Refer to readme for format of queries file.
-Added --displayResponses option with column formatting. 
-With newer improvements for DNS queries, included a data structure format version tag in json output.
+* Added the ability to resolve different DNS requests - SOA, NS, CNAME, A, AAAA, PTR, MX. By default an entry in queries file that doesn't have a DNS type will be assumed to be an 'A' record. Refer to readme for format of queries file.
+* Added --displayResponses option with column formatting. 
+* With newer improvements for DNS queries, included a data structure format version tag in json output.
 
 ### Changed
 Updated the display results formatting when run from command line.
