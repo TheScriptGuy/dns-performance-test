@@ -1,8 +1,8 @@
 # DNS Performance Testing
-# Version:            0.18
-# Last updated:       2021-08-22
+# Version:            0.19
+# Last updated:       2021-08-24
 
-scriptVersion = "0.18"
+scriptVersion = "0.19"
 
 import sys
 import argparse
@@ -454,10 +454,13 @@ def gatherData(queryResults,scriptStartTime,scriptEndTime):
     return myData
 
 def parseArguments():
+    """
+    Create argument options and parse through them to determine what to do with script.
+    """
 
     # Instantiate the parser
-    parser = argparse.ArgumentParser(description='DNS Performance testing')
-
+    global scriptVersion
+    parser = argparse.ArgumentParser(description='DNS Performance Testing' + scriptVersion)
 
     # Optional arguments
     parser.add_argument('--ifname', default="nameservers.txt",
@@ -502,41 +505,39 @@ def parseArguments():
     global args
     args = parser.parse_args()
 
-    if args.verbose:
-        print("Script version: " + scriptVersion)
 
-def defineInfoArguments():
+def defineInfoArguments(o_systemData, o_systemInfo):
     global args
     # If setTag argument is set, create the new Tag.
     if args.setTag:
-        o.setTag(args.setTag)
+        o_systemData.setTag(args.setTag)
         print('New tag set.')
         sys.exit(0)
 
     # If getTag is set, it will grab the value in tag.cfg file.
     if args.getTag:
-        print(myInfo.getTag())
+        print(o_systemInfo.getTag())
         sys.exit(0)
 
     # If deleteTag is set, it will delete the tag.cfg file.
     if args.deleteTag:
-        o.deleteTag()
+        o_systemData.deleteTag()
         sys.exit(0)
 
     # If getUuid is set, it grab the value in uuid.cfg
     if args.getUuid:
-        print(myInfo.getUuid())
+        print(o_systemInfo.getUuid())
         sys.exit(0)
 
     # If deleteUuid is set, the uuid.cfg file will be deleted.
     if args.deleteUuid:
-        o.deleteUuid()
+        o_systemData.deleteUuid()
         sys.exit(0)
 
     # If renewUuid is set, first delete uuid.cfg file, then generate a new uuid.
     if args.renewUuid:
-        o.deleteUuid()
-        o.createUuidIfNotExist()
+        o_systemData.deleteUuid()
+        o_systemData.createUuidIfNotExist()
         sys.exit(0)
 
 
@@ -545,10 +546,10 @@ def main():
     parseArguments()
     
     # Gather the information from the device where the script is executed.
-    o = systemData.systemData()
-    myInfo = systemInfo.systemInfo()
+    o_mySystemData = systemData.systemData()
+    o_myInfo = systemInfo.systemInfo()
 
-    defineInfoArguments()
+    defineInfoArguments(o_mySystemData,o_myInfo)
 
 
     # Script start time (UTC format)
