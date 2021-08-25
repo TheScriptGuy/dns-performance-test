@@ -2,6 +2,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.19 - 2021-08-24
+### Changed
+* Fixed bug around UUID and Tag handling.
+* Improved object names and comments in script.
+
 ## 0.18 - 2021-08-22
 ### Added
 * Added the ability to resolve different DNS requests - SOA, NS, CNAME, A, AAAA, PTR, MX. By default an entry in queries file that doesn't have a DNS type will be assumed to be an 'A' record. Refer to readme for format of queries file.
