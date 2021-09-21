@@ -200,7 +200,7 @@ Future improvements:
 * default list of nameservers and queries to be included in bundle
 * ability to publish results to google sheets, ms excel online, etc.
 * show if the DNS lookup is a PASS/FAIL based on evaluating criteria.
-** evaluation criteria:
-*** ALL responses must be the same
-*** ANY of the responses must be what we expect
-** ability to set an evaluation file based on immediate results for comparison later.
+    * evaluation criteria:
+        * ALL responses must be the same
+        * ANY of the responses must be what we expect
+* ability to set an evaluation file based on immediate results for comparison later.
