@@ -199,3 +199,4 @@ If you want output there are some options available (in any combination):
 Future improvements:
 * default list of nameservers and queries to be included in bundle
 * ability to publish results to google sheets, ms excel online, etc.
+* show if the DNS lookup is a PASS/FAIL based on evaluating criteria.
