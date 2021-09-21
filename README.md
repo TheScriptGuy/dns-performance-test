@@ -203,4 +203,6 @@ Future improvements:
     * evaluation criteria:
         * ALL responses must be the same
         * ANY of the responses must be what we expect
-* ability to set an evaluation file based on immediate results for comparison later.
+    * ability to set an evaluation file based on immediate results for comparison later.
+    * show current date, and delta compared to when initial evaluation file was created.
+* support for DNSSEC queries
