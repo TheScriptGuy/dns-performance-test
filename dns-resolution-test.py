@@ -1,8 +1,8 @@
 # DNS Performance Testing
-# Version:            0.19
-# Last updated:       2021-08-24
+# Version:            0.21
+# Last updated:       2022-01-23
 
-scriptVersion = "0.19"
+scriptVersion = "0.21"
 
 import sys
 import argparse
@@ -349,10 +349,10 @@ def performQueries(nameservers, queries):
             # If there were any errors, add 'Err'
             if answer:
                 if queryType == "a" or queryType == "aaaa":
-                    for response in answer:
+                    for counter,response in enumerate(answer):
                         aResponse = response.address
                         l_response.append(aResponse)
-                        currentLength = len(str(aResponse))
+                        currentLength = len(str(aResponse)) * (counter + 1)
                         if dnsResponseTextMaxLength < currentLength:
                             dnsResponseTextMaxLength = currentLength
 
