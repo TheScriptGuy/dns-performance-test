@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.20 - 2022-01-23
+## Changed
+* Fixed display output to be better formatted.
+
 ## 0.19 - 2021-08-24
 ### Changed
 * Fixed bug around UUID and Tag handling.
