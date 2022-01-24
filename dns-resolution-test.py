@@ -460,7 +460,7 @@ def parseArguments():
 
     # Instantiate the parser
     global scriptVersion
-    parser = argparse.ArgumentParser(description='DNS Performance Testing' + scriptVersion)
+    parser = argparse.ArgumentParser(description='DNS Performance Testing ' + scriptVersion)
 
     # Optional arguments
     parser.add_argument('--ifname', default="nameservers.txt",
