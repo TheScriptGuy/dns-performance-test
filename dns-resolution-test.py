@@ -1,8 +1,8 @@
 # DNS Performance Testing
-# Version:            0.21
+# Version:            0.20
 # Last updated:       2022-01-23
 
-scriptVersion = "0.21"
+scriptVersion = "0.20"
 
 import sys
 import argparse
