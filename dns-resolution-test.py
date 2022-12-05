@@ -1,8 +1,8 @@
 # DNS Performance Testing
-# Version:            0.20
-# Last updated:       2022-01-23
+# Version:            0.21
+# Last updated:       2022-12-04
 
-scriptVersion = "0.20"
+scriptVersion = "0.21"
 
 import sys
 import argparse
@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 import os.path
 from os import path
 
-from systemInfo import systemInfo,systemData
+from systemInfo import systemInfo, systemData
 
 import requests
 
@@ -23,7 +23,7 @@ def writeResults(results, outputFile):
     """
     Send the json data to the outputFile variable.
     """
-    outputfile = open(outputFile,"w",encoding="utf-8")
+    outputfile = open(outputFile, "w", encoding="utf-8")
     
     outputfile.write(json.dumps(results)) 
     
@@ -36,7 +36,7 @@ def printJsonStdout(results):
     print(json.dumps(results))
     print()
 
-def uploadJsonHTTP(url,jsonData):
+def uploadJsonHTTP(url, sonData):
     """
     This will upload the json data to a URL via a POST method.
     If the verbose argument is set, it'll display what URL it's being 
@@ -48,7 +48,7 @@ def uploadJsonHTTP(url,jsonData):
     if args.verbose:
         print('Submission URL: ', url)
         print('jsonData: ', json.dumps(jsonData))
-        print('X-Headers: ',x.headers)
+        print('X-Headers: ', x.headers)
     return x.headers
 
 def getFileFromURL(fileURL):
@@ -153,14 +153,14 @@ def loadQueriesFile(queriesFile):
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
     for line in queryFile:
-        if "," in line:
+        if ","  in line:
             tmpLine = line.rstrip('\n').split(',')
             queries.append({tmpLine[1]: tmpLine[0]})
         else:
             queries.append({'a': line.rstrip('\n')})
         
         if args.verbose:
-            print(line.rstrip('\n'),end=' ')
+            print(line.rstrip('\n'), end=' ')
         
     
     if args.verbose:
@@ -187,7 +187,7 @@ def displayResults(results):
     if args.verbose:
         print("dnsResponseTextMaxLength = ", dnsResponseTextMaxLength)
 
-    headers = ['DNS Server','DNS Type','DNS Query', 'DNS Response', 'Response Time (ms)','DNS TTL']
+    headers = ['DNS Server', 'DNS Type', 'DNS Query', 'DNS Response', 'Response Time (ms)', 'DNS TTL']
 
     """
     DNS Column lengths
@@ -205,18 +205,18 @@ def displayResults(results):
     Print the headers with appropriate spacing.
     """
 
-    for count,item in enumerate(headers):
+    for count, tem in enumerate(headers):
         if count == 0:
             # DNS Server
-            print(f'{item:{filler}<{dnsServerLength}}',end='')
+            print(f'{item:{filler}<{dnsServerLength}}', end='')
 
         if count == 1: 
             # DNS Type
-            print(f'{item:{filler}<{dnsQueryTypeLength}}',end='')
+            print(f'{item:{filler}<{dnsQueryTypeLength}}', end='')
 
         if count == 2:
             # DNS Query
-            print(f'{item:{filler}<{dnsQueryLength}}',end='')
+            print(f'{item:{filler}<{dnsQueryLength}}', end='')
 
         if count == 3:
             # DNS Response
@@ -224,11 +224,11 @@ def displayResults(results):
 
         if count == 4:
             # Response Time (ms)
-            print(f'{item:{filler}<{dnsResponseTimeLength}}',end='')
+            print(f'{item:{filler}<{dnsResponseTimeLength}}', end='')
 
         if count == 5:
             # DNS TTL
-            print(f'{item:{filler}<{dnsResponseTTLLength}}',end='')
+            print(f'{item:{filler}<{dnsResponseTTLLength}}', end='')
 
 
     print()
@@ -239,7 +239,7 @@ def displayResults(results):
     for nameserverItem in results:
 
         for dataItem in results[nameserverItem]:
-            print(f'{nameserverItem:{filler}<{dnsServerLength}}',end='')
+            print(f'{nameserverItem:{filler}<{dnsServerLength}}', end='')
 
             for dataItem2 in dataItem:
                 #print(str(dataItem[dataItem2]))
@@ -253,11 +253,11 @@ def displayResults(results):
                     dnsElements = list(dataItem[dataItem2])
 
                     dnsResponseFormatted = ','.join(dnsElements)
-                    print(f'{dnsResponseFormatted:{filler}<{dnsResponseTextMaxLength}}',end='')
+                    print(f'{dnsResponseFormatted:{filler}<{dnsResponseTextMaxLength}}', end='')
 
                 if dataItem2 == 'responseTime':
                     responseTime = dataItem[dataItem2]
-                    print(f'{responseTime:{filler}<{dnsResponseTimeLength}}',end='')
+                    print(f'{responseTime:{filler}<{dnsResponseTimeLength}}', end='')
 
                 if dataItem2 == 'responseTTL':
                     responseTTL = dataItem[dataItem2]
@@ -272,6 +272,7 @@ def performQueries(nameservers, queries):
 
     # Set the resolver
     resolver = dns.resolver.Resolver()
+    
     # Set the results to empty dict
     results = {}
 
@@ -303,7 +304,7 @@ def performQueries(nameservers, queries):
                 if queryType == "ptr":
                     answer = resolver.resolve_address(queryName)
                 else:
-                    answer = resolver.resolve(queryName,queryType)
+                    answer = resolver.resolve(queryName, queryType)
             
             # If there's a timeout, display the timeout, which query and which nameserver
             # typical timeout is 5.5s
@@ -349,7 +350,7 @@ def performQueries(nameservers, queries):
             # If there were any errors, add 'Err'
             if answer:
                 if queryType == "a" or queryType == "aaaa":
-                    for counter,response in enumerate(answer):
+                    for counter, response in enumerate(answer):
                         aResponse = response.address
                         l_response.append(aResponse)
                         currentLength = len(str(aResponse)) * (counter + 1)
@@ -420,7 +421,7 @@ def performQueries(nameservers, queries):
 
     return results
 
-def gatherData(queryResults,scriptStartTime,scriptEndTime):
+def gatherData(queryResults, scriptStartTime, scriptEndTime):
     """
     This will collect all the data into a uniform data structure that can 
     help with measuring results across multiple executions. 
@@ -549,7 +550,7 @@ def main():
     o_mySystemData = systemData.systemData()
     o_myInfo = systemInfo.systemInfo()
 
-    defineInfoArguments(o_mySystemData,o_myInfo)
+    defineInfoArguments(o_mySystemData, o_myInfo)
 
 
     # Script start time (UTC format)
@@ -572,7 +573,7 @@ def main():
     queries = loadQueriesFile(queryFile)
     nameservers = loadNameServersFile(nameserversFile)
     
-    results = performQueries(nameservers,queries)
+    results = performQueries(nameservers, queries)
 
     # If verbose argument is parsed, display the results to stdout.
     if args.verbose:
@@ -589,11 +590,11 @@ def main():
         print('\nScript stop time: ', str(scriptEndTime))
     
     # Collate all the data into myData
-    myData = gatherData(results,str(scriptStartTime),str(scriptEndTime))
+    myData = gatherData(results, str(scriptStartTime), str(scriptEndTime))
     
     # If the httpPOST argument is set, send the json data to the URL via POST method
     if args.httpPOST:
-        print(uploadJsonHTTP(args.httpPOST,myData))
+        print(uploadJsonHTTP(args.httpPOST, myData))
 
     # If the jsonstdout argument is set, then print myData to stdout.
     if args.jsonstdout:
@@ -602,14 +603,10 @@ def main():
     # If the ofresults is set, output the data to outputFileResults.
     # Results will always be overwritten.
     if args.ofresults:
-        writeResults(myData,outputFileResults)
-
-
-
+        writeResults(myData, outputFileResults)
 
 if __name__ == '__main__':
     try:
-        
         main()
 
     except KeyboardInterrupt:
@@ -619,4 +616,3 @@ if __name__ == '__main__':
             sys.exit(0)
         except SystemExit:
             os._exit(0)
-

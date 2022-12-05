@@ -1,9 +1,13 @@
-
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.21 - 2022-12-04
+### Changed
+* Improved python syntax formatting.
+* Improved interpretation of DNS responses.
+
 ## 0.20 - 2022-01-23
-## Changed
+### Changed
 * Fixed display output to be better formatted.
 
 ## 0.19 - 2021-08-24
