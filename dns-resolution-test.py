@@ -1,9 +1,6 @@
 # DNS Performance Testing
 # Version:            0.21
 # Last updated:       2022-12-04
-
-scriptVersion = "0.21"
-
 import sys
 import argparse
 import json
@@ -18,6 +15,7 @@ import requests
 
 # Global Variables
 dnsResponseTextMaxLength = 0
+scriptVersion = "0.21"
 
 def writeResults(results, outputFile):
     """
@@ -242,7 +240,6 @@ def displayResults(results):
             print(f'{nameserverItem:{filler}<{dnsServerLength}}', end='')
 
             for dataItem2 in dataItem:
-                #print(str(dataItem[dataItem2]))
                 if dataItem2 == 'query':
                     queryType = list(dataItem[dataItem2].items())[0][0]
                     queryName = list(dataItem[dataItem2].items())[0][1]
