@@ -10,6 +10,7 @@ import sys
 import argparse
 
 def copyJsonFile2Excel(jsonFile, excelFile):
+    """copyJsonFile2Excel definition."""
     print('Starting conversion...')
     if path.exists(jsonFile):
         jf = open(jsonFile, 'r', encoding='utf-8')
@@ -35,7 +36,7 @@ def copyJsonFile2Excel(jsonFile, excelFile):
     worksheet.write(row+1, col, 'Output file:')
     worksheet.write(row+1, col+1, excelFile)
     worksheet.write(row+2, col, 'Number of Nameserver Entries:')
-    worksheet.write(row+3, col, 'Average response time:')    
+    worksheet.write(row+3, col, 'Average response time:')
     entries =  0
 
     row = 6
@@ -54,7 +55,7 @@ def copyJsonFile2Excel(jsonFile, excelFile):
 
     # Grab the first line from the file
     jf_line = jf.readline()
-    
+
     # Loop through each line that is read
     while jf_line:
         json_dict  = json.loads(jf_line)
@@ -76,12 +77,12 @@ def copyJsonFile2Excel(jsonFile, excelFile):
 
         # Keep track with the number of entries.
         entries += 1
-        
+
         # Read the next line in the file.
         jf_line = jf.readline()
-        
+
         row += 1
-    
+
     # Close the jsonFile
     jf.close()
 
@@ -96,10 +97,11 @@ def copyJsonFile2Excel(jsonFile, excelFile):
 
     # Close the excel spreadsheet.
     workbook.close()
-    
+
     print('Done.')
 
 def parseArguments():
+    """parseArguments definition."""
     # Instantiate the parser
     parser = argparse.ArgumentParser(description='json to excel converter')
 
@@ -113,21 +115,21 @@ def parseArguments():
     global args
     args = parser.parse_args()
 
-
 def main():
+    """Main definition."""
     parseArguments()
 
     jsonFile = args.jsonfile
     excelFile = args.excelfile
     print('Input file argument : ', jsonFile)
     print('Output file argument: ', excelFile)
-    
-    copyJsonFile2Excel(jsonFile, excelFile)    
-    
+
+    copyJsonFile2Excel(jsonFile, excelFile)
+
 if __name__ == '__main__':
     try:
         main()
-    
+
     except KeyboardInterrupt:
         print('Interrupted')
         print

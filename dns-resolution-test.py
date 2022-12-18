@@ -24,9 +24,9 @@ def writeResults(results, outputFile):
     Send the json data to the outputFile variable.
     """
     outputfile = open(outputFile, "w", encoding="utf-8")
-    
-    outputfile.write(json.dumps(results)) 
-    
+
+    outputfile.write(json.dumps(results))
+
     outputfile.close()
 
 def printJsonStdout(results):
@@ -39,11 +39,11 @@ def printJsonStdout(results):
 def uploadJsonHTTP(url, sonData):
     """
     This will upload the json data to a URL via a POST method.
-    If the verbose argument is set, it'll display what URL it's being 
+    If the verbose argument is set, it'll display what URL it's being
     submitted to as well as the json data (jsonData).
     When the response is returned, it'll return the X-Headers that are sent back
     from the server.
-    """   
+    """
     x = requests.post(url, json = jsonData)
     if args.verbose:
         print('Submission URL: ', url)
@@ -91,9 +91,9 @@ def loadNameServersFile(nameserversFile):
     This will load the name servers from the file nameserversFile.
     Each name server should be on it's own line.
     """
-    
+
     dnsNameServers = []
-    
+
     """
     Check to see if nameserversFile is a URL and if it is, attempt to download it
     """
@@ -101,7 +101,7 @@ def loadNameServersFile(nameserversFile):
     if nameserversFile.startswith('http://') or nameserversFile.startswith('https://'):
         dnsnameServers = getFileFromURL(nameserversFile)
         return dnsnameServers
-   
+
 
     if not path.exists(nameserversFile):
         print('I cannot find file ' + nameserversFile)
@@ -109,7 +109,7 @@ def loadNameServersFile(nameserversFile):
 
     if args.verbose:
         print('Loading the nameservers that are to be queried.')
-    
+
     nameServerFile = open(nameserversFile, "r", encoding="utf-8")
 
     for line in nameServerFile:
@@ -148,7 +148,7 @@ def loadQueriesFile(queriesFile):
     if args.verbose:
         print('Loading queries from ' + queriesFile)
 
-    
+
 
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
@@ -158,11 +158,11 @@ def loadQueriesFile(queriesFile):
             queries.append({tmpLine[1]: tmpLine[0]})
         else:
             queries.append({'a': line.rstrip('\n')})
-        
+
         if args.verbose:
             print(line.rstrip('\n'), end=' ')
-        
-    
+
+
     if args.verbose:
         print()
         print(queries)
@@ -176,7 +176,7 @@ def loadQueriesFile(queriesFile):
 
 def displayResults(results):
     """
-    This will display the results to stdout. Not always formatted correctly 
+    This will display the results to stdout. Not always formatted correctly
     because the responses could have a variable number.
     """
 
@@ -210,7 +210,7 @@ def displayResults(results):
             # DNS Server
             print(f'{item:{filler}<{dnsServerLength}}', end='')
 
-        if count == 1: 
+        if count == 1:
             # DNS Type
             print(f'{item:{filler}<{dnsQueryTypeLength}}', end='')
 
@@ -272,7 +272,7 @@ def performQueries(nameservers, queries):
 
     # Set the resolver
     resolver = dns.resolver.Resolver()
-    
+
     # Set the results to empty dict
     results = {}
 
@@ -285,7 +285,7 @@ def performQueries(nameservers, queries):
 
     for server in nameservers:
         # Set the name servers to a single list entry.
-        # We don't need multiple failover nameservers because we want 
+        # We don't need multiple failover nameservers because we want
         # a result from each name server and want to point out any failures.
         resolver.nameservers = [server]
         for query in queries:
@@ -305,7 +305,7 @@ def performQueries(nameservers, queries):
                     answer = resolver.resolve_address(queryName)
                 else:
                     answer = resolver.resolve(queryName, queryType)
-            
+
             # If there's a timeout, display the timeout, which query and which nameserver
             # typical timeout is 5.5s
 
@@ -333,7 +333,7 @@ def performQueries(nameservers, queries):
                 print('No response. ' + str(query) + ' @' + server)
                 answer = []
 
-            # End query time. 
+            # End query time.
             queryEndTime = datetime.now()
 
             # Calculate the difference between End Query Time and Start Query Time
@@ -342,10 +342,10 @@ def performQueries(nameservers, queries):
 
             # Format the queryTime response.
             s_queryTime = str("{:.1f}".format(queryTime))
-            
+
             l_response = []
-           
-            # If there were any answers from the query, append the response 
+
+            # If there were any answers from the query, append the response
             # to l_response.
             # If there were any errors, add 'Err'
             if answer:
@@ -372,7 +372,7 @@ def performQueries(nameservers, queries):
                         currentLength = len(str(ptrResponse))
                         if dnsResponseTextMaxLength < currentLength:
                             dnsResponseTextMaxLength = currentLength
-                            
+
                 if queryType == "soa":
                     for response in answer:
                         soaResponse = response.to_text().split(' ')[0]
@@ -412,7 +412,7 @@ def performQueries(nameservers, queries):
                 # Create the json dict with all of the responses.
                 thisQuery = {"query": query, "response": l_response, "responseTime": s_queryTime, "responseTTL": a_responseTTL}
                 results[server].append(thisQuery)
-                
+
                 counter += 1
 
             except KeyError:
@@ -423,8 +423,8 @@ def performQueries(nameservers, queries):
 
 def gatherData(queryResults, scriptStartTime, scriptEndTime):
     """
-    This will collect all the data into a uniform data structure that can 
-    help with measuring results across multiple executions. 
+    This will collect all the data into a uniform data structure that can
+    help with measuring results across multiple executions.
 
     Data that is included is:
     * deviceUuid         - a unique device identifier.
@@ -433,10 +433,10 @@ def gatherData(queryResults, scriptStartTime, scriptEndTime):
     * hostName           - the hostname of the device where script is executing.
     * scriptUTCStartTime - script start time (UTC format).
     * scriptUTCEndTime   - script end time (UTC format).
-    * queryResults       - The results of all queries that were performed against the nameservers.  
+    * queryResults       - The results of all queries that were performed against the nameservers.
     """
     myInfo = systemInfo.systemInfo()
-    
+
     if myInfo.uuid == "":
         n = systemData.systemData()
         n.createUuidIfNotExist()
@@ -545,7 +545,7 @@ def defineInfoArguments(o_systemData, o_systemInfo):
 def main():
     # Parse all the arguments
     parseArguments()
-    
+
     # Gather the information from the device where the script is executed.
     o_mySystemData = systemData.systemData()
     o_myInfo = systemInfo.systemInfo()
@@ -559,8 +559,8 @@ def main():
     # If verbose argument is set, display the script start time to stdout.
     if args.verbose:
         print('Script start time: ', str(scriptStartTime), '\n')
-        
-    
+
+
     # Query file from ifquery argument
     queryFile = args.ifquery
 
@@ -569,29 +569,29 @@ def main():
 
     # Results to be written to output.json
     outputFileResults = 'output.json'
-    
+
     queries = loadQueriesFile(queryFile)
     nameservers = loadNameServersFile(nameserversFile)
-    
+
     results = performQueries(nameservers, queries)
 
     # If verbose argument is parsed, display the results to stdout.
     if args.verbose:
         print(results)
-    
+
     if args.displayResponses:
         displayResults(results)
 
     # Script end time (UTC format)
     scriptEndTime = datetime.utcnow()
-    
+
     # If verbose argument is set, display script end time.
     if args.verbose:
         print('\nScript stop time: ', str(scriptEndTime))
-    
+
     # Collate all the data into myData
     myData = gatherData(results, str(scriptStartTime), str(scriptEndTime))
-    
+
     # If the httpPOST argument is set, send the json data to the URL via POST method
     if args.httpPOST:
         print(uploadJsonHTTP(args.httpPOST, myData))
@@ -599,7 +599,7 @@ def main():
     # If the jsonstdout argument is set, then print myData to stdout.
     if args.jsonstdout:
         printJsonStdout(myData)
-    
+
     # If the ofresults is set, output the data to outputFileResults.
     # Results will always be overwritten.
     if args.ofresults:
