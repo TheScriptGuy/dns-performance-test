@@ -83,23 +83,19 @@ def getFileFromURL(fileURL):
         tmpData = ['URL connection error']
     return tmpData
 
-
 def loadNameServersFile(nameserversFile):
     """
     This will load the name servers from the file nameserversFile.
     Each name server should be on it's own line.
     """
-
     dnsNameServers = []
 
     """
     Check to see if nameserversFile is a URL and if it is, attempt to download it
     """
-
     if nameserversFile.startswith('http://') or nameserversFile.startswith('https://'):
         dnsnameServers = getFileFromURL(nameserversFile)
         return dnsnameServers
-
 
     if not path.exists(nameserversFile):
         print('I cannot find file ' + nameserversFile)
@@ -119,7 +115,6 @@ def loadNameServersFile(nameserversFile):
 
     return dnsNameServers
 
-
 def loadQueriesFile(queriesFile):
     """
     This will load the queries that need to be performed against each name server.
@@ -127,14 +122,12 @@ def loadQueriesFile(queriesFile):
     """
     queries = []
 
-
     """
     Check to see if queriesFile is a URL and if it is, attempt to download it
     """
     if queriesFile.startswith('http://') or queriesFile.startswith('https://'):
         queries = getFileFromURL(queriesFile)
         return queries
-
 
     """
     Check to see if if the file exists. If not, exit with error code 1.
@@ -145,8 +138,6 @@ def loadQueriesFile(queriesFile):
 
     if args.verbose:
         print('Loading queries from ' + queriesFile)
-
-
 
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
@@ -160,17 +151,13 @@ def loadQueriesFile(queriesFile):
         if args.verbose:
             print(line.rstrip('\n'), end=' ')
 
-
     if args.verbose:
         print()
         print(queries)
 
     queryFile.close()
 
-
     return queries
-
-
 
 def displayResults(results):
     """
@@ -197,13 +184,10 @@ def displayResults(results):
     dnsResponseTimeLength = 20
     dnsResponseTTLLength = 8
 
-
-
     """
     Print the headers with appropriate spacing.
     """
-
-    for count, tem in enumerate(headers):
+    for count, item in enumerate(headers):
         if count == 0:
             # DNS Server
             print(f'{item:{filler}<{dnsServerLength}}', end='')
@@ -228,14 +212,12 @@ def displayResults(results):
             # DNS TTL
             print(f'{item:{filler}<{dnsResponseTTLLength}}', end='')
 
-
     print()
 
     """
     Iterate through the response data and format the columns with appropriate spaces.
     """
     for nameserverItem in results:
-
         for dataItem in results[nameserverItem]:
             print(f'{nameserverItem:{filler}<{dnsServerLength}}', end='')
 
@@ -259,8 +241,6 @@ def displayResults(results):
                 if dataItem2 == 'responseTTL':
                     responseTTL = dataItem[dataItem2]
                     print(f'{responseTTL:{filler}<{dnsResponseTTLLength}}')
-
-
 
 def performQueries(nameservers, queries):
     """
@@ -346,7 +326,7 @@ def performQueries(nameservers, queries):
             # to l_response.
             # If there were any errors, add 'Err'
             if answer:
-                if queryType == "a" or queryType == "aaaa":
+                if queryType in ("a", "aaaa"):
                     for counter, response in enumerate(answer):
                         aResponse = response.address
                         l_response.append(aResponse)
