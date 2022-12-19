@@ -17,6 +17,7 @@ import requests
 dnsResponseTextMaxLength = 0
 scriptVersion = "0.21"
 
+
 def writeResults(results, outputFile):
     """Send the json data to the outputFile variable."""
     with open(outputFile, "w", encoding="utf-8") as outputFile:
@@ -129,7 +130,7 @@ def loadQueriesFile(queriesFile):
     queryFile = open(queriesFile, "r", encoding="utf-8")
 
     for line in queryFile:
-        if ","  in line:
+        if "," in line:
             tmpLine = line.rstrip('\n').split(',')
             queries.append({tmpLine[1]: tmpLine[0]})
         else:
@@ -509,7 +510,6 @@ def main():
     # If verbose argument is set, display the script start time to stdout.
     if args.verbose:
         print('Script start time: ', str(scriptStartTime), '\n')
-
 
     # Query file from ifquery argument
     queryFile = args.ifquery
