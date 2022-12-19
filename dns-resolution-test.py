@@ -19,11 +19,8 @@ scriptVersion = "0.21"
 
 def writeResults(results, outputFile):
     """Send the json data to the outputFile variable."""
-    outputfile = open(outputFile, "w", encoding="utf-8")
-
-    outputfile.write(json.dumps(results))
-
-    outputfile.close()
+    with open(outputFile, "w", encoding="utf-8") as outputFile:
+        outputFile.write(json.dumps(results))
 
 
 def printJsonStdout(results):
