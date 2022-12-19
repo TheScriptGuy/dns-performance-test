@@ -9,9 +9,8 @@ class systemData:
 
     def setTag(self, tagName):
         """Set the tag."""
-        f_tag = open(self.tagFilename, 'w')
-        f_tag.write(tagName)
-        f_tag.close()
+        with open(self.tagFilename, 'w') as f_tag:
+            f_tag.write(tagName)
 
     def deleteTag(self):
         """Delete the tag."""
@@ -28,7 +27,7 @@ class systemData:
         else:
             print('UUID file does not exist.')
             sys.exit(1)
- 
+
     def generateNewUuid(self):
         """Remove old uuid. Generate a new uuid."""
         os.remove(self.uuidFilename)
@@ -42,9 +41,9 @@ class systemData:
         """Create a new uuid if it doesn't exist."""
         if not path.exists(self.uuidFilename):
             newUuid = self.generateUuid()
-            f_uuid = open(self.uuidFilename, 'w')
-            f_uuid.write(str(newUuid))
-            f_uuid.close()
+
+            with open(self.uuidFilename, 'w') as f_uuid:
+                f_uuid.write(str(newUuid))
 
     def __init__(self):
         """Initialize the class variables."""

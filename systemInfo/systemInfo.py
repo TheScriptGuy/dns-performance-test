@@ -5,7 +5,7 @@ from os import path
 
 class systemInfo:
     """systemInfo class."""
- 
+
     uuidFilename = 'uuid.cfg'
     tagFilename = 'tag.cfg'
 

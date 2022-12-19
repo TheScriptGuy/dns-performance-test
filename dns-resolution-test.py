@@ -60,6 +60,7 @@ def getFileFromURL(fileURL):
                 tmpData.remove('')
             except ValueError:
                 # Do nothing
+                print()
         else:
             tmpData = ['Error while retrieving URL']
     except socket.gaierror:
