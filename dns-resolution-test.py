@@ -152,7 +152,6 @@ def displayResults(results):
     This will display the results to stdout. Not always formatted correctly
     because the responses could have a variable number.
     """
-
     # Get the global variable dnsResponseTextMaxLength
     global dnsResponseTextMaxLength
     filler = ' '
@@ -227,7 +226,6 @@ def displayResults(results):
 
 def performQueries(nameservers, queries):
     """This will perform all the all the queries against each nameserver."""
-
     # Set the resolver
     resolver = dns.resolver.Resolver()
 
@@ -410,7 +408,6 @@ def gatherData(queryResults, scriptStartTime, scriptEndTime):
 
 def parseArguments():
     """Create argument options and parse through them to determine what to do with script."""
-
     # Instantiate the parser
     global scriptVersion
     parser = argparse.ArgumentParser(description='DNS Performance Testing ' + scriptVersion)
