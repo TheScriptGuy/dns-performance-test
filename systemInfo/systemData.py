@@ -8,7 +8,7 @@ class systemData:
 
     def setTag(self,tagName):
         """Set the tag."""
-        f_tag = open(self.tagFilename,'w')
+        f_tag = open(self.tagFilename, 'w')
         f_tag.write(tagName)
         f_tag.close()
 
@@ -41,7 +41,7 @@ class systemData:
         """Create a new uuid if it doesn't exist."""
         if not path.exists(self.uuidFilename):
             newUuid = self.generateUuid()
-            f_uuid = open(self.uuidFilename,'w')
+            f_uuid = open(self.uuidFilename, 'w')
             f_uuid.write(str(newUuid))
             f_uuid.close()
 

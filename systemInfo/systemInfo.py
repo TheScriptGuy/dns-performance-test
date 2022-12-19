@@ -17,7 +17,7 @@ class systemInfo:
         myUuid = ""
 
         if path.exists(self.uuidFilename):
-            f_uuid = open(self.uuidFilename,'r')
+            f_uuid = open(self.uuidFilename, 'r')
             myUuid = f_uuid.readline()
             f_uuid.close()
         
@@ -27,7 +27,7 @@ class systemInfo:
         """Get the tag."""
         myTag = ""
         if path.exists(self.tagFilename):
-            f_tag = open(self.tagFilename,'r')
+            f_tag = open(self.tagFilename, 'r')
             myTag = f_tag.readline().rstrip()
             f_tag.close()
 

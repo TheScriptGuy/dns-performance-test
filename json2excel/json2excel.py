@@ -58,7 +58,7 @@ def copyJsonFile2Excel(jsonFile, excelFile):
 
     # Loop through each line that is read
     while jf_line:
-        json_dict  = json.loads(jf_line)
+        json_dict = json.loads(jf_line)
 
         for nsEntry in json_dict['queryResults']:
             for query in json_dict['queryResults'][nsEntry]:
@@ -90,7 +90,7 @@ def copyJsonFile2Excel(jsonFile, excelFile):
     responseTimeArea = 'J8:J' + str(row)
 
     # Create a conditional format to highlight any entries above the average response time.
-    worksheet.conditional_format(responseTimeArea, { 'type': 'average', 'criteria': 'above', 'format': responseTimeFormat } )
+    worksheet.conditional_format(responseTimeArea, { 'type': 'average', 'criteria': 'above', 'format': responseTimeFormat})
 
     # Display the average time at the information section of spreadsheet for comparison purposes.
     worksheet.write(3, 1, '=AVERAGE(' + responseTimeArea + ')', numberFormat)

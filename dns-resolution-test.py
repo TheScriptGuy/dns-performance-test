@@ -83,6 +83,7 @@ def getFileFromURL(fileURL):
         tmpData = ['URL connection error']
     return tmpData
 
+
 def loadNameServersFile(nameserversFile):
     """
     This will load the name servers from the file nameserversFile.
@@ -114,6 +115,7 @@ def loadNameServersFile(nameserversFile):
         print()
 
     return dnsNameServers
+
 
 def loadQueriesFile(queriesFile):
     """
@@ -158,6 +160,7 @@ def loadQueriesFile(queriesFile):
     queryFile.close()
 
     return queries
+
 
 def displayResults(results):
     """
@@ -241,6 +244,7 @@ def displayResults(results):
                 if dataItem2 == 'responseTTL':
                     responseTTL = dataItem[dataItem2]
                     print(f'{responseTTL:{filler}<{dnsResponseTTLLength}}')
+
 
 def performQueries(nameservers, queries):
     """
@@ -398,6 +402,7 @@ def performQueries(nameservers, queries):
 
     return results
 
+
 def gatherData(queryResults, scriptStartTime, scriptEndTime):
     """
     This will collect all the data into a uniform data structure that can
@@ -430,6 +435,7 @@ def gatherData(queryResults, scriptStartTime, scriptEndTime):
     }
 
     return myData
+
 
 def parseArguments():
     """
