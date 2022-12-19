@@ -591,6 +591,7 @@ def main():
     if args.ofresults:
         writeResults(myData, outputFileResults)
 
+
 if __name__ == '__main__':
     try:
         main()
