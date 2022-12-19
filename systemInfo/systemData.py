@@ -6,7 +6,7 @@ from os import path
 class systemData:
     """systemData class."""
 
-    def setTag(self,tagName):
+    def setTag(self, tagName):
         """Set the tag."""
         f_tag = open(self.tagFilename, 'w')
         f_tag.write(tagName)

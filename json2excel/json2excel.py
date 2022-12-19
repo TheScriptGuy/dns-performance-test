@@ -90,7 +90,7 @@ def copyJsonFile2Excel(jsonFile, excelFile):
     responseTimeArea = 'J8:J' + str(row)
 
     # Create a conditional format to highlight any entries above the average response time.
-    worksheet.conditional_format(responseTimeArea, { 'type': 'average', 'criteria': 'above', 'format': responseTimeFormat})
+    worksheet.conditional_format(responseTimeArea, {'type': 'average', 'criteria': 'above', 'format': responseTimeFormat})
 
     # Display the average time at the information section of spreadsheet for comparison purposes.
     worksheet.write(3, 1, '=AVERAGE(' + responseTimeArea + ')', numberFormat)

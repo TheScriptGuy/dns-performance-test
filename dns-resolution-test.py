@@ -27,12 +27,14 @@ def writeResults(results, outputFile):
 
     outputfile.close()
 
+
 def printJsonStdout(results):
     """
     This will output the json data to stdout.
     """
     print(json.dumps(results))
     print()
+
 
 def uploadJsonHTTP(url, jsonData):
     """
@@ -42,12 +44,13 @@ def uploadJsonHTTP(url, jsonData):
     When the response is returned, it'll return the X-Headers that are sent back
     from the server.
     """
-    x = requests.post(url, json = jsonData)
+    x = requests.post(url, json=jsonData)
     if args.verbose:
         print('Submission URL: ', url)
         print('jsonData: ', json.dumps(jsonData))
         print('X-Headers: ', x.headers)
     return x.headers
+
 
 def getFileFromURL(fileURL):
     """
