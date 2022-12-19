@@ -56,14 +56,10 @@ def getFileFromURL(fileURL):
         if urlData.status_code == 200:
             tmpData = urlData.text.split('\n')
             try:
-                """
-                Attempt to remove any blank entries in the dict
-                """
+                # Attempt to remove any blank entries in the dict
                 tmpData.remove('')
             except ValueError:
-                """
-                Do nothing
-                """
+                # Do nothing
         else:
             tmpData = ['Error while retrieving URL']
     except socket.gaierror:
@@ -88,7 +84,7 @@ def loadNameServersFile(nameserversFile):
     """
     dnsNameServers = []
 
-    """Check to see if nameserversFile is a URL and if it is, attempt to download it."""
+    # Check to see if nameserversFile is a URL and if it is, attempt to download it.
     if nameserversFile.startswith('http://') or nameserversFile.startswith('https://'):
         dnsnameServers = getFileFromURL(nameserversFile)
         return dnsnameServers
@@ -119,12 +115,12 @@ def loadQueriesFile(queriesFile):
     """
     queries = []
 
-    """Check to see if queriesFile is a URL and if it is, attempt to download it."""
+    # Check to see if queriesFile is a URL and if it is, attempt to download it.
     if queriesFile.startswith('http://') or queriesFile.startswith('https://'):
         queries = getFileFromURL(queriesFile)
         return queries
 
-    """Check to see if if the file exists. If not, exit with error code 1."""
+    # Check to see if if the file exists. If not, exit with error code 1.
     if not path.exists(queriesFile):
         print('I cannot find file ' + queriesFile)
         sys.exit(1)
@@ -168,7 +164,7 @@ def displayResults(results):
 
     headers = ['DNS Server', 'DNS Type', 'DNS Query', 'DNS Response', 'Response Time (ms)', 'DNS TTL']
 
-    """DNS Column lengths"""
+    # DNS Column lengths
     dnsServerLength = 18
     dnsQueryTypeLength = 15
     dnsQueryLength = 30
@@ -176,7 +172,7 @@ def displayResults(results):
     dnsResponseTimeLength = 20
     dnsResponseTTLLength = 8
 
-    """Print the headers with appropriate spacing."""
+    # Print the headers with appropriate spacing.
     for count, item in enumerate(headers):
         if count == 0:
             # DNS Server
@@ -204,7 +200,7 @@ def displayResults(results):
 
     print()
 
-    """Iterate through the response data and format the columns with appropriate spaces."""
+    # Iterate through the response data and format the columns with appropriate spaces.
     for nameserverItem in results:
         for dataItem in results[nameserverItem]:
             print(f'{nameserverItem:{filler}<{dnsServerLength}}', end='')
@@ -511,7 +507,6 @@ def main():
     o_myInfo = systemInfo.systemInfo()
 
     defineInfoArguments(o_mySystemData, o_myInfo)
-
 
     # Script start time (UTC format)
     scriptStartTime = datetime.utcnow()
