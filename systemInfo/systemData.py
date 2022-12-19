@@ -27,7 +27,7 @@ class systemData:
         else:
             print('UUID file does not exist.')
             sys.exit(1)
-    
+ 
     def generateNewUuid(self):
         """Remove old uuid. Generate a new uuid."""
         os.remove(self.uuidFilename)

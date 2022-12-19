@@ -4,7 +4,7 @@ from os import path
 
 class systemInfo:
     """systemInfo class."""
-    
+ 
     uuidFilename = 'uuid.cfg'
     tagFilename = 'tag.cfg'
 
@@ -20,7 +20,7 @@ class systemInfo:
             f_uuid = open(self.uuidFilename, 'r')
             myUuid = f_uuid.readline()
             f_uuid.close()
-        
+
         return myUuid
 
     def getTag(self):
