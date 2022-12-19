@@ -34,7 +34,7 @@ def printJsonStdout(results):
     print(json.dumps(results))
     print()
 
-def uploadJsonHTTP(url, sonData):
+def uploadJsonHTTP(url, jsonData):
     """
     This will upload the json data to a URL via a POST method.
     If the verbose argument is set, it'll display what URL it's being
