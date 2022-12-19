@@ -9,6 +9,7 @@ from os import path
 import sys
 import argparse
 
+
 def copyJsonFile2Excel(jsonFile, excelFile):
     """copyJsonFile2Excel definition."""
     print('Starting conversion...')
@@ -100,6 +101,7 @@ def copyJsonFile2Excel(jsonFile, excelFile):
 
     print('Done.')
 
+
 def parseArguments():
     """parseArguments definition."""
     # Instantiate the parser
@@ -114,6 +116,7 @@ def parseArguments():
 
     global args
     args = parser.parse_args()
+
 
 def main():
     """Main definition."""
