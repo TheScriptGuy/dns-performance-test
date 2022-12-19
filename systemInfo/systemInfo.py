@@ -38,4 +38,3 @@ class systemInfo:
         self.hostname = self.getHostname()
         self.uuid = self.getUuid()
         self.deviceTag = self.getTag()
-

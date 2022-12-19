@@ -18,9 +18,7 @@ dnsResponseTextMaxLength = 0
 scriptVersion = "0.21"
 
 def writeResults(results, outputFile):
-    """
-    Send the json data to the outputFile variable.
-    """
+    """Send the json data to the outputFile variable."""
     outputfile = open(outputFile, "w", encoding="utf-8")
 
     outputfile.write(json.dumps(results))
@@ -29,9 +27,7 @@ def writeResults(results, outputFile):
 
 
 def printJsonStdout(results):
-    """
-    This will output the json data to stdout.
-    """
+    """This will output the json data to stdout."""
     print(json.dumps(results))
     print()
 
@@ -53,9 +49,7 @@ def uploadJsonHTTP(url, jsonData):
 
 
 def getFileFromURL(fileURL):
-    """
-    This function will download the contents of fileURL and return a list with the contents.
-    """
+    """This function will download the contents of fileURL and return a list with the contents."""
     tmpData = []
     try:
         urlData = requests.get(fileURL)
@@ -94,9 +88,7 @@ def loadNameServersFile(nameserversFile):
     """
     dnsNameServers = []
 
-    """
-    Check to see if nameserversFile is a URL and if it is, attempt to download it
-    """
+    """Check to see if nameserversFile is a URL and if it is, attempt to download it."""
     if nameserversFile.startswith('http://') or nameserversFile.startswith('https://'):
         dnsnameServers = getFileFromURL(nameserversFile)
         return dnsnameServers
@@ -127,16 +119,12 @@ def loadQueriesFile(queriesFile):
     """
     queries = []
 
-    """
-    Check to see if queriesFile is a URL and if it is, attempt to download it
-    """
+    """Check to see if queriesFile is a URL and if it is, attempt to download it."""
     if queriesFile.startswith('http://') or queriesFile.startswith('https://'):
         queries = getFileFromURL(queriesFile)
         return queries
 
-    """
-    Check to see if if the file exists. If not, exit with error code 1.
-    """
+    """Check to see if if the file exists. If not, exit with error code 1."""
     if not path.exists(queriesFile):
         print('I cannot find file ' + queriesFile)
         sys.exit(1)
@@ -180,9 +168,7 @@ def displayResults(results):
 
     headers = ['DNS Server', 'DNS Type', 'DNS Query', 'DNS Response', 'Response Time (ms)', 'DNS TTL']
 
-    """
-    DNS Column lengths
-    """
+    """DNS Column lengths"""
     dnsServerLength = 18
     dnsQueryTypeLength = 15
     dnsQueryLength = 30
@@ -190,9 +176,7 @@ def displayResults(results):
     dnsResponseTimeLength = 20
     dnsResponseTTLLength = 8
 
-    """
-    Print the headers with appropriate spacing.
-    """
+    """Print the headers with appropriate spacing."""
     for count, item in enumerate(headers):
         if count == 0:
             # DNS Server
@@ -220,9 +204,7 @@ def displayResults(results):
 
     print()
 
-    """
-    Iterate through the response data and format the columns with appropriate spaces.
-    """
+    """Iterate through the response data and format the columns with appropriate spaces."""
     for nameserverItem in results:
         for dataItem in results[nameserverItem]:
             print(f'{nameserverItem:{filler}<{dnsServerLength}}', end='')
@@ -250,9 +232,7 @@ def displayResults(results):
 
 
 def performQueries(nameservers, queries):
-    """
-    This will perform all the all the queries against each nameserver.
-    """
+    """This will perform all the all the queries against each nameserver."""
 
     # Set the resolver
     resolver = dns.resolver.Resolver()
@@ -441,9 +421,7 @@ def gatherData(queryResults, scriptStartTime, scriptEndTime):
 
 
 def parseArguments():
-    """
-    Create argument options and parse through them to determine what to do with script.
-    """
+    """Create argument options and parse through them to determine what to do with script."""
 
     # Instantiate the parser
     global scriptVersion
@@ -494,6 +472,7 @@ def parseArguments():
 
 
 def defineInfoArguments(o_systemData, o_systemInfo):
+    """defineInfoArguments definition"""
     global args
     # If setTag argument is set, create the new Tag.
     if args.setTag:
@@ -529,6 +508,7 @@ def defineInfoArguments(o_systemData, o_systemInfo):
 
 
 def main():
+    """main definition"""
     # Parse all the arguments
     parseArguments()
 

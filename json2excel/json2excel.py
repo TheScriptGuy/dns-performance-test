@@ -37,7 +37,7 @@ def copyJsonFile2Excel(jsonFile, excelFile):
     worksheet.write(row+1, col+1, excelFile)
     worksheet.write(row+2, col, 'Number of Nameserver Entries:')
     worksheet.write(row+3, col, 'Average response time:')
-    entries =  0
+    entries = 0
 
     row = 6
 
