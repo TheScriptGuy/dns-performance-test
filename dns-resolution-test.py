@@ -318,48 +318,42 @@ def performQueries(nameservers, queries):
                         aResponse = response.address
                         l_response.append(aResponse)
                         currentLength = len(str(aResponse)) * (counter + 1)
-                        if dnsResponseTextMaxLength < currentLength:
-                            dnsResponseTextMaxLength = currentLength
+                        dnsResponseTextMaxLength = max(dnsResponseTextMaxLength, currentLength)
 
                 if queryType == "mx":
                     for response in answer:
                         mxResponse = response.to_text()
                         l_response.append(mxResponse)
                         currentLength = len(str(mxResponse))
-                        if dnsResponseTextMaxLength < currentLength:
-                            dnsResponseTextMaxLength = currentLength
+                        dnsResponseTextMaxLength = max(dnsResponseTextMaxLength, currentLength)
 
                 if queryType == "ptr":
                     for response in answer:
                         ptrResponse = response.to_text()
                         l_response.append(ptrResponse)
                         currentLength = len(str(ptrResponse))
-                        if dnsResponseTextMaxLength < currentLength:
-                            dnsResponseTextMaxLength = currentLength
+                        dnsResponseTextMaxLength = max(dnsResponseTextMaxLength, currentLength)
 
                 if queryType == "soa":
                     for response in answer:
                         soaResponse = response.to_text().split(' ')[0]
                         l_response.append(soaResponse)
                         currentLength = len(str(soaResponse))
-                        if dnsResponseTextMaxLength < currentLength:
-                            dnsResponseTextMaxLength = currentLength
+                        dnsResponseTextMaxLength = max(dnsResponseTextMaxLength, currentLength)
 
                 if queryType == "cname":
                     for response in answer:
                         cnameResponse = response.to_text()
                         l_response.append(cnameResponse)
                         currentLength = len(str(cnameResponse))
-                        if dnsResponseTextMaxLength < currentLength:
-                            dnsResponseTextMaxLength = currentLength
+                        dnsResponseTextMaxLength = max(dnsResponseTextMaxLength, currentLength)
 
                 if queryType == "ns":
                     for response in answer:
                         nsResponse = response.to_text()
                         l_response.append(nsResponse)
                         currentLength = len(str(nsResponse))
-                        if dnsResponseTextMaxLength < currentLength:
-                            dnsResponseTextMaxLength = currentLength
+                        dnsResponseTextMaxLength = max(dnsResponseTextMaxLength, currentLength)
 
                 a_responseTTL = answer.rrset.ttl
             else:
@@ -578,7 +572,6 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt:
         print('Interrupted')
-        print
         try:
             sys.exit(0)
         except SystemExit:

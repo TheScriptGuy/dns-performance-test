@@ -133,7 +133,6 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt:
         print('Interrupted')
-        print
         try:
             sys.exit(0)
         except SystemExit:
